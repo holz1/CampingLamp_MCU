@@ -21,13 +21,10 @@
 #include "TLC59711.h"
 #include "debounce.h"
 
-//#include "signal.h"
-
-
-#define BAUDRATE 51			//19200 -> Refer Datasheet Page 190
-#define DIMM_STEP 0xFF		//Step for 1 Repeat of the debounce routine (can be set in debounce.h)
-#define MAX_GS_VAL	0xFFFF	//Maximum value for Greyscale
-#define NUM_OF_SETS	5    	//Number of predefined Color Sets
+#define BAUDRATE    51			//19200 -> Refer Datasheet Page 190
+#define DIMM_STEP   0xFF		//Step for 1 Repeat of the debounce routine (can be set in debounce.h)
+#define MAX_GS_VAL	0xFFFF		//Maximum value for Greyscale
+#define NUM_OF_SETS	5    		//Number of predefined Color Sets
 
 
 typedef struct {
@@ -37,17 +34,19 @@ typedef struct {
 	uint16_t warmW2;			//warmWhite 2
 } GSvalues;
 
-uint8_t EEMEM NonVolatileChar ;
-uint16_t EEMEM NonVolatileInt ;
-uint8_t EEMEM NonVolatileString [10];
 
-
+//Predefined Color sets -> later unimportant
+GSvalues EEMEM GScSets[NUM_OF_SETS] =  {{ 0x0000, 0x0000, 0x0000, 0x0000 },		//Color Set 1
+										{ 0x000f, 0x000f, 0x000f, 0x000f },		//Color Set 2
+										{ 0x00FF, 0x00FF, 0x00FF, 0x00FF },		//Color Set 3
+										{ 0x0FFF, 0x0FFF, 0x0FFF, 0x0FFF },		//Color Set 4
+										{ 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF }};	//Color Set 5
 
 //intital Greyscale Values
 GSvalues actGSvalue = {0xFF, 0xFF, 0xFF, 0xFF};
 	
 bool dimm_direc = true;			//true  = up
-//false = down
+								//false = down
 
 uint8_t CSet = 0;				//Color Set
 
@@ -82,9 +81,22 @@ ISR(TIMER0_OVF_vect)		// every 10ms for debouncing the switch
 	}
 }
 
+void writeOutGSvalues(GSvalues* GSvalue)
+{
+	myChip.setGreyScale(3, GSvalue->coldW1, GSvalue->warmW1, 0x0);
+	myChip.setGreyScale(2, GSvalue->coldW2, GSvalue->warmW2, 0x0);
+}
+
 void switch_CSet(uint8_t CSet)
 {
-	
+	//One GSvalues is 8 Bit long
+	//EEMEM starts with addressing at 0
+	//so the first element (Cset = 0) is at 8*CSet = 0 , second at 8*Cset = 8*1 ... usw
+	//interrupts should be deactivated during read and write process
+	cli();
+	eeprom_read_block (( void *) &actGSvalue , ( const void *)(CSet*8) , 8);
+	writeOutGSvalues(&actGSvalue);
+	sei();
 }
 
 void process_switch(void)
@@ -101,16 +113,16 @@ void process_switch(void)
 			
 	//long press recognized (needed for correct behaviour of get_key_rpt_l() )
 	if( get_key_long_r( 1<<KEY0 ))
-	asm("nop");			//do nothing
+		asm("nop");			//do nothing
 
 			
 	//Pressed an hold -> Dimming called every 50ms
 	if(get_key_rpt_l( 1<<KEY0 ))
 	{
-		//LED_PORT ^= (1<<PORTB0);
 		//All colors are treated the same
 		if(dimm_direc == true) //dimm up
 		{
+			//overflow prevention
 			if((actGSvalue.coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW1 <= (MAX_GS_VAL-DIMM_STEP)) &&
 			(actGSvalue.coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW2 <= (MAX_GS_VAL-DIMM_STEP)))
 			{
@@ -120,13 +132,12 @@ void process_switch(void)
 				actGSvalue.warmW2 += DIMM_STEP;
 						
 				//write out to chip
-				myChip.setGreyScale(3, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
-				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
+				writeOutGSvalues(&actGSvalue);
 			}
 		}
 		else
-		{
-			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&
+		{	//dimm down
+			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&		//overflow prevention
 			(actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
 			{
 				actGSvalue.coldW1 -= DIMM_STEP;
@@ -135,8 +146,7 @@ void process_switch(void)
 				actGSvalue.warmW2 -= DIMM_STEP;
 						
 				//write out to chip
-				myChip.setGreyScale(3, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
-				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
+				writeOutGSvalues(&actGSvalue);
 			}
 		}
 	}
@@ -145,12 +155,14 @@ void process_switch(void)
 	{
 		dimm_direc = !dimm_direc;	//toggle dimming direction
 	}
-			
 }
 
 int main(void)
 {
-
+	//BTM222 Reset Configuration (not needed because of internal Pullup of the BTM222)
+	/*DDRB |= (1<<PB1);
+	PORTB |= (1<<PB1);		//high -> no Reset
+	PORTB &= ~(1<<PB1);		//low  -> Reset   */
 
 	SPI_init();
 	USART_Init(BAUDRATE);
@@ -164,23 +176,21 @@ int main(void)
 	PORTB |= (1 <<PORTB0);			//Switch LED on
 		
 	PORTD |= (1<<PORTD3);			//Activate Pullups for PD3 (Switch)
-
 	
-	//BTM222 Reset Configuration (not needed because of internal Pullup of the BTM222)
-	/*DDRB |= (1<<PB1);
-	PORTB |= (1<<PB1);		//high -> no Reset
-	PORTB &= ~(1<<PB1);		//low  -> Reset   */
+	switch_CSet(CSet);				//Color set 0 ist default at startup
+	
 	
 
 	int faktor =257;
-	myChip.setGreyScale(2, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
-	myChip.setGreyScale(3, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
+
+	
+	
 	sei();							//Enable Global Interrups (for USART)
 	
     while (1) 
     {
 			
-		process_switch();
+		process_switch();			//collects the polling information from the button
 		
 		if (DataInReceiveBuffer())
 		{

@@ -3,33 +3,33 @@ CampingLamp_MCU.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         0000000a  00800100  000007f0  000008a4  2**0
+  0 .data         0000000a  00800100  00000810  000008c4  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000007f0  00000000  00000000  000000b4  2**1
+  1 .text         00000810  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000154  0080010a  0080010a  000008ae  2**0
+  2 .bss          00000154  0080010a  0080010a  000008ce  2**0
                   ALLOC
-  3 .eeprom       0000000d  00810000  00810000  000008ae  2**0
+  3 .eeprom       00000028  00810000  00810000  000008ce  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  4 .comment      00000030  00000000  00000000  000008bb  2**0
+  4 .comment      00000030  00000000  00000000  000008f6  2**0
                   CONTENTS, READONLY
-  5 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000008ec  2**2
+  5 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000928  2**2
                   CONTENTS, READONLY
-  6 .debug_aranges 00000148  00000000  00000000  0000092c  2**0
+  6 .debug_aranges 00000150  00000000  00000000  00000968  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00001409  00000000  00000000  00000a74  2**0
+  7 .debug_info   0000141f  00000000  00000000  00000ab8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00000856  00000000  00000000  00001e7d  2**0
+  8 .debug_abbrev 00000873  00000000  00000000  00001ed7  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   0000060a  00000000  00000000  000026d3  2**0
+  9 .debug_line   000006f0  00000000  00000000  0000274a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  00000304  00000000  00000000  00002ce0  2**2
+ 10 .debug_frame  00000314  00000000  00000000  00002e3c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    000006f1  00000000  00000000  00002fe4  2**0
+ 11 .debug_str    00000707  00000000  00000000  00003150  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    000008e8  00000000  00000000  000036d5  2**0
+ 12 .debug_loc    0000093f  00000000  00000000  00003857  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 000000f8  00000000  00000000  00003fbd  2**0
+ 13 .debug_ranges 00000100  00000000  00000000  00004196  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -77,8 +77,8 @@ Disassembly of section .text:
   76:	11 e0       	ldi	r17, 0x01	; 1
   78:	a0 e0       	ldi	r26, 0x00	; 0
   7a:	b1 e0       	ldi	r27, 0x01	; 1
-  7c:	e0 ef       	ldi	r30, 0xF0	; 240
-  7e:	f7 e0       	ldi	r31, 0x07	; 7
+  7c:	e0 e1       	ldi	r30, 0x10	; 16
+  7e:	f8 e0       	ldi	r31, 0x08	; 8
   80:	02 c0       	rjmp	.+4      	; 0x86 <__do_copy_data+0x10>
   82:	05 90       	lpm	r0, Z+
   84:	0d 92       	st	X+, r0
@@ -111,8 +111,8 @@ Disassembly of section .text:
   ac:	c4 33       	cpi	r28, 0x34	; 52
   ae:	d1 07       	cpc	r29, r17
   b0:	c9 f7       	brne	.-14     	; 0xa4 <__do_global_ctors+0x8>
-  b2:	0e 94 b3 01 	call	0x366	; 0x366 <main>
-  b6:	0c 94 f6 03 	jmp	0x7ec	; 0x7ec <_exit>
+  b2:	0e 94 c5 01 	call	0x38a	; 0x38a <main>
+  b6:	0c 94 06 04 	jmp	0x80c	; 0x80c <_exit>
 
 000000ba <__bad_interrupt>:
   ba:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -316,313 +316,321 @@ ISR(TIMER0_OVF_vect)		// every 10ms for debouncing the switch
  1e4:	1f 90       	pop	r1
  1e6:	18 95       	reti
 
-000001e8 <_Z14process_switchv>:
-{
-	
-}
+000001e8 <_Z16writeOutGSvaluesP8GSvalues>:
 
-void process_switch(void)
+void writeOutGSvalues(GSvalues* GSvalue)
 {
  1e8:	0f 93       	push	r16
  1ea:	1f 93       	push	r17
  1ec:	cf 93       	push	r28
  1ee:	df 93       	push	r29
+ 1f0:	ec 01       	movw	r28, r24
+	myChip.setGreyScale(3, GSvalue->coldW1, GSvalue->warmW1, 0x0);
+ 1f2:	2a 81       	ldd	r18, Y+2	; 0x02
+ 1f4:	3b 81       	ldd	r19, Y+3	; 0x03
+ 1f6:	48 81       	ld	r20, Y
+ 1f8:	59 81       	ldd	r21, Y+1	; 0x01
+ 1fa:	00 e0       	ldi	r16, 0x00	; 0
+ 1fc:	10 e0       	ldi	r17, 0x00	; 0
+ 1fe:	63 e0       	ldi	r22, 0x03	; 3
+ 200:	81 e2       	ldi	r24, 0x21	; 33
+ 202:	91 e0       	ldi	r25, 0x01	; 1
+ 204:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
+	myChip.setGreyScale(2, GSvalue->coldW2, GSvalue->warmW2, 0x0);
+ 208:	2e 81       	ldd	r18, Y+6	; 0x06
+ 20a:	3f 81       	ldd	r19, Y+7	; 0x07
+ 20c:	4c 81       	ldd	r20, Y+4	; 0x04
+ 20e:	5d 81       	ldd	r21, Y+5	; 0x05
+ 210:	62 e0       	ldi	r22, 0x02	; 2
+ 212:	81 e2       	ldi	r24, 0x21	; 33
+ 214:	91 e0       	ldi	r25, 0x01	; 1
+ 216:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
+}
+ 21a:	df 91       	pop	r29
+ 21c:	cf 91       	pop	r28
+ 21e:	1f 91       	pop	r17
+ 220:	0f 91       	pop	r16
+ 222:	08 95       	ret
+
+00000224 <_Z11switch_CSeth>:
+void switch_CSet(uint8_t CSet)
+{
+	//One GSvalues is 8 Bit long
+	//EEMEM starts with addressing at 0
+	//so the first element (Cset = 0) is at 8*CSet = 0 , second at 8*Cset = 8*1 ... usw
+	cli();
+ 224:	f8 94       	cli
+	eeprom_read_block (( void *) &actGSvalue , ( const void *)(CSet*8) , 8);
+ 226:	68 2f       	mov	r22, r24
+ 228:	70 e0       	ldi	r23, 0x00	; 0
+ 22a:	66 0f       	add	r22, r22
+ 22c:	77 1f       	adc	r23, r23
+ 22e:	66 0f       	add	r22, r22
+ 230:	77 1f       	adc	r23, r23
+ 232:	66 0f       	add	r22, r22
+ 234:	77 1f       	adc	r23, r23
+ 236:	48 e0       	ldi	r20, 0x08	; 8
+ 238:	50 e0       	ldi	r21, 0x00	; 0
+ 23a:	81 e0       	ldi	r24, 0x01	; 1
+ 23c:	91 e0       	ldi	r25, 0x01	; 1
+ 23e:	0e 94 f6 03 	call	0x7ec	; 0x7ec <eeprom_read_block>
+	writeOutGSvalues(&actGSvalue);
+ 242:	81 e0       	ldi	r24, 0x01	; 1
+ 244:	91 e0       	ldi	r25, 0x01	; 1
+ 246:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <_Z16writeOutGSvaluesP8GSvalues>
+	sei();
+ 24a:	78 94       	sei
+ 24c:	08 95       	ret
+
+0000024e <_Z14process_switchv>:
+
+
+void process_switch(void)
+{
 	//Short Press recognized
 	if(get_key_short(1<<KEY0))
- 1f0:	88 e0       	ldi	r24, 0x08	; 8
- 1f2:	0e 94 75 00 	call	0xea	; 0xea <_Z13get_key_shorth>
- 1f6:	88 23       	and	r24, r24
- 1f8:	71 f0       	breq	.+28     	; 0x216 <_Z14process_switchv+0x2e>
+ 24e:	88 e0       	ldi	r24, 0x08	; 8
+ 250:	0e 94 75 00 	call	0xea	; 0xea <_Z13get_key_shorth>
+ 254:	88 23       	and	r24, r24
+ 256:	91 f0       	breq	.+36     	; 0x27c <_Z14process_switchv+0x2e>
 	{
 		PORTB ^= (1<<PORTB0);
- 1fa:	95 b1       	in	r25, 0x05	; 5
- 1fc:	81 e0       	ldi	r24, 0x01	; 1
- 1fe:	89 27       	eor	r24, r25
- 200:	85 b9       	out	0x05, r24	; 5
+ 258:	95 b1       	in	r25, 0x05	; 5
+ 25a:	81 e0       	ldi	r24, 0x01	; 1
+ 25c:	89 27       	eor	r24, r25
+ 25e:	85 b9       	out	0x05, r24	; 5
 		CSet++;
- 202:	80 91 59 01 	lds	r24, 0x0159
- 206:	8f 5f       	subi	r24, 0xFF	; 255
+ 260:	80 91 59 01 	lds	r24, 0x0159
+ 264:	8f 5f       	subi	r24, 0xFF	; 255
 		if (CSet == NUM_OF_SETS) CSet = 0;
- 208:	85 30       	cpi	r24, 0x05	; 5
- 20a:	19 f0       	breq	.+6      	; 0x212 <_Z14process_switchv+0x2a>
+ 266:	85 30       	cpi	r24, 0x05	; 5
+ 268:	19 f0       	breq	.+6      	; 0x270 <_Z14process_switchv+0x22>
 {
 	//Short Press recognized
 	if(get_key_short(1<<KEY0))
 	{
 		PORTB ^= (1<<PORTB0);
 		CSet++;
- 20c:	80 93 59 01 	sts	0x0159, r24
- 210:	02 c0       	rjmp	.+4      	; 0x216 <_Z14process_switchv+0x2e>
+ 26a:	80 93 59 01 	sts	0x0159, r24
+ 26e:	02 c0       	rjmp	.+4      	; 0x274 <_Z14process_switchv+0x26>
 		if (CSet == NUM_OF_SETS) CSet = 0;
- 212:	10 92 59 01 	sts	0x0159, r1
+ 270:	10 92 59 01 	sts	0x0159, r1
 				
 		switch_CSet(CSet);
+ 274:	80 91 59 01 	lds	r24, 0x0159
+ 278:	0e 94 12 01 	call	0x224	; 0x224 <_Z11switch_CSeth>
 	}
 			
 	//long press recognized (needed for correct behaviour of get_key_rpt_l() )
 	if( get_key_long_r( 1<<KEY0 ))
- 216:	88 e0       	ldi	r24, 0x08	; 8
- 218:	0e 94 88 00 	call	0x110	; 0x110 <_Z14get_key_long_rh>
- 21c:	88 23       	and	r24, r24
- 21e:	09 f0       	breq	.+2      	; 0x222 <_Z14process_switchv+0x3a>
+ 27c:	88 e0       	ldi	r24, 0x08	; 8
+ 27e:	0e 94 88 00 	call	0x110	; 0x110 <_Z14get_key_long_rh>
+ 282:	88 23       	and	r24, r24
+ 284:	09 f0       	breq	.+2      	; 0x288 <_Z14process_switchv+0x3a>
 	asm("nop");			//do nothing
- 220:	00 00       	nop
+ 286:	00 00       	nop
 
 			
 	//Pressed an hold -> Dimming called every 50ms
 	if(get_key_rpt_l( 1<<KEY0 ))
- 222:	88 e0       	ldi	r24, 0x08	; 8
- 224:	0e 94 90 00 	call	0x120	; 0x120 <_Z13get_key_rpt_lh>
- 228:	88 23       	and	r24, r24
- 22a:	09 f4       	brne	.+2      	; 0x22e <_Z14process_switchv+0x46>
- 22c:	8c c0       	rjmp	.+280    	; 0x346 <_Z14process_switchv+0x15e>
+ 288:	88 e0       	ldi	r24, 0x08	; 8
+ 28a:	0e 94 90 00 	call	0x120	; 0x120 <_Z13get_key_rpt_lh>
+ 28e:	88 23       	and	r24, r24
+ 290:	09 f4       	brne	.+2      	; 0x294 <_Z14process_switchv+0x46>
+ 292:	6f c0       	rjmp	.+222    	; 0x372 <_Z14process_switchv+0x124>
 	{
 		//LED_PORT ^= (1<<PORTB0);
 		//All colors are treated the same
 		if(dimm_direc == true) //dimm up
- 22e:	80 91 00 01 	lds	r24, 0x0100
- 232:	88 23       	and	r24, r24
- 234:	09 f4       	brne	.+2      	; 0x238 <_Z14process_switchv+0x50>
- 236:	48 c0       	rjmp	.+144    	; 0x2c8 <_Z14process_switchv+0xe0>
+ 294:	80 91 00 01 	lds	r24, 0x0100
+ 298:	88 23       	and	r24, r24
+ 29a:	d1 f1       	breq	.+116    	; 0x310 <_Z14process_switchv+0xc2>
 		{
 			if((actGSvalue.coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW1 <= (MAX_GS_VAL-DIMM_STEP)) &&
- 238:	80 91 01 01 	lds	r24, 0x0101
- 23c:	90 91 02 01 	lds	r25, 0x0102
- 240:	81 30       	cpi	r24, 0x01	; 1
- 242:	2f ef       	ldi	r18, 0xFF	; 255
- 244:	92 07       	cpc	r25, r18
- 246:	08 f0       	brcs	.+2      	; 0x24a <_Z14process_switchv+0x62>
- 248:	7e c0       	rjmp	.+252    	; 0x346 <_Z14process_switchv+0x15e>
- 24a:	20 91 03 01 	lds	r18, 0x0103
- 24e:	30 91 04 01 	lds	r19, 0x0104
- 252:	21 30       	cpi	r18, 0x01	; 1
- 254:	4f ef       	ldi	r20, 0xFF	; 255
- 256:	34 07       	cpc	r19, r20
- 258:	08 f0       	brcs	.+2      	; 0x25c <_Z14process_switchv+0x74>
- 25a:	75 c0       	rjmp	.+234    	; 0x346 <_Z14process_switchv+0x15e>
+ 29c:	80 91 01 01 	lds	r24, 0x0101
+ 2a0:	90 91 02 01 	lds	r25, 0x0102
+ 2a4:	81 30       	cpi	r24, 0x01	; 1
+ 2a6:	2f ef       	ldi	r18, 0xFF	; 255
+ 2a8:	92 07       	cpc	r25, r18
+ 2aa:	08 f0       	brcs	.+2      	; 0x2ae <_Z14process_switchv+0x60>
+ 2ac:	62 c0       	rjmp	.+196    	; 0x372 <_Z14process_switchv+0x124>
+ 2ae:	20 91 03 01 	lds	r18, 0x0103
+ 2b2:	30 91 04 01 	lds	r19, 0x0104
+ 2b6:	21 30       	cpi	r18, 0x01	; 1
+ 2b8:	4f ef       	ldi	r20, 0xFF	; 255
+ 2ba:	34 07       	cpc	r19, r20
+ 2bc:	08 f0       	brcs	.+2      	; 0x2c0 <_Z14process_switchv+0x72>
+ 2be:	59 c0       	rjmp	.+178    	; 0x372 <_Z14process_switchv+0x124>
 			(actGSvalue.coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW2 <= (MAX_GS_VAL-DIMM_STEP)))
- 25c:	60 91 05 01 	lds	r22, 0x0105
- 260:	70 91 06 01 	lds	r23, 0x0106
+ 2c0:	40 91 05 01 	lds	r20, 0x0105
+ 2c4:	50 91 06 01 	lds	r21, 0x0106
 	{
 		//LED_PORT ^= (1<<PORTB0);
 		//All colors are treated the same
 		if(dimm_direc == true) //dimm up
 		{
 			if((actGSvalue.coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW1 <= (MAX_GS_VAL-DIMM_STEP)) &&
- 264:	61 30       	cpi	r22, 0x01	; 1
- 266:	4f ef       	ldi	r20, 0xFF	; 255
- 268:	74 07       	cpc	r23, r20
- 26a:	08 f0       	brcs	.+2      	; 0x26e <_Z14process_switchv+0x86>
- 26c:	6c c0       	rjmp	.+216    	; 0x346 <_Z14process_switchv+0x15e>
+ 2c8:	41 30       	cpi	r20, 0x01	; 1
+ 2ca:	6f ef       	ldi	r22, 0xFF	; 255
+ 2cc:	56 07       	cpc	r21, r22
+ 2ce:	08 f0       	brcs	.+2      	; 0x2d2 <_Z14process_switchv+0x84>
+ 2d0:	50 c0       	rjmp	.+160    	; 0x372 <_Z14process_switchv+0x124>
 			(actGSvalue.coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW2 <= (MAX_GS_VAL-DIMM_STEP)))
- 26e:	e0 91 07 01 	lds	r30, 0x0107
- 272:	f0 91 08 01 	lds	r31, 0x0108
- 276:	e1 30       	cpi	r30, 0x01	; 1
- 278:	4f ef       	ldi	r20, 0xFF	; 255
- 27a:	f4 07       	cpc	r31, r20
- 27c:	08 f0       	brcs	.+2      	; 0x280 <_Z14process_switchv+0x98>
- 27e:	63 c0       	rjmp	.+198    	; 0x346 <_Z14process_switchv+0x15e>
+ 2d2:	60 91 07 01 	lds	r22, 0x0107
+ 2d6:	70 91 08 01 	lds	r23, 0x0108
+ 2da:	61 30       	cpi	r22, 0x01	; 1
+ 2dc:	ef ef       	ldi	r30, 0xFF	; 255
+ 2de:	7e 07       	cpc	r23, r30
+ 2e0:	08 f0       	brcs	.+2      	; 0x2e4 <_Z14process_switchv+0x96>
+ 2e2:	47 c0       	rjmp	.+142    	; 0x372 <_Z14process_switchv+0x124>
 			{
 				actGSvalue.coldW1 += DIMM_STEP;
- 280:	ac 01       	movw	r20, r24
- 282:	41 50       	subi	r20, 0x01	; 1
- 284:	5f 4f       	sbci	r21, 0xFF	; 255
- 286:	c1 e0       	ldi	r28, 0x01	; 1
- 288:	d1 e0       	ldi	r29, 0x01	; 1
- 28a:	59 83       	std	Y+1, r21	; 0x01
- 28c:	48 83       	st	Y, r20
+ 2e4:	e1 e0       	ldi	r30, 0x01	; 1
+ 2e6:	f1 e0       	ldi	r31, 0x01	; 1
+ 2e8:	81 50       	subi	r24, 0x01	; 1
+ 2ea:	9f 4f       	sbci	r25, 0xFF	; 255
+ 2ec:	91 83       	std	Z+1, r25	; 0x01
+ 2ee:	80 83       	st	Z, r24
 				actGSvalue.warmW1 += DIMM_STEP;
- 28e:	21 50       	subi	r18, 0x01	; 1
- 290:	3f 4f       	sbci	r19, 0xFF	; 255
- 292:	3b 83       	std	Y+3, r19	; 0x03
- 294:	2a 83       	std	Y+2, r18	; 0x02
+ 2f0:	21 50       	subi	r18, 0x01	; 1
+ 2f2:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2f4:	33 83       	std	Z+3, r19	; 0x03
+ 2f6:	22 83       	std	Z+2, r18	; 0x02
 				actGSvalue.coldW2 += DIMM_STEP;
- 296:	61 50       	subi	r22, 0x01	; 1
- 298:	7f 4f       	sbci	r23, 0xFF	; 255
- 29a:	7d 83       	std	Y+5, r23	; 0x05
- 29c:	6c 83       	std	Y+4, r22	; 0x04
+ 2f8:	41 50       	subi	r20, 0x01	; 1
+ 2fa:	5f 4f       	sbci	r21, 0xFF	; 255
+ 2fc:	55 83       	std	Z+5, r21	; 0x05
+ 2fe:	44 83       	std	Z+4, r20	; 0x04
 				actGSvalue.warmW2 += DIMM_STEP;
- 29e:	e1 50       	subi	r30, 0x01	; 1
- 2a0:	ff 4f       	sbci	r31, 0xFF	; 255
- 2a2:	ff 83       	std	Y+7, r31	; 0x07
- 2a4:	ee 83       	std	Y+6, r30	; 0x06
+ 300:	61 50       	subi	r22, 0x01	; 1
+ 302:	7f 4f       	sbci	r23, 0xFF	; 255
+ 304:	77 83       	std	Z+7, r23	; 0x07
+ 306:	66 83       	std	Z+6, r22	; 0x06
 						
 				//write out to chip
-				myChip.setGreyScale(3, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
- 2a6:	00 e0       	ldi	r16, 0x00	; 0
- 2a8:	10 e0       	ldi	r17, 0x00	; 0
- 2aa:	63 e0       	ldi	r22, 0x03	; 3
- 2ac:	81 e2       	ldi	r24, 0x21	; 33
- 2ae:	91 e0       	ldi	r25, 0x01	; 1
- 2b0:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
-				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
- 2b4:	2e 81       	ldd	r18, Y+6	; 0x06
- 2b6:	3f 81       	ldd	r19, Y+7	; 0x07
- 2b8:	4c 81       	ldd	r20, Y+4	; 0x04
- 2ba:	5d 81       	ldd	r21, Y+5	; 0x05
- 2bc:	62 e0       	ldi	r22, 0x02	; 2
- 2be:	81 e2       	ldi	r24, 0x21	; 33
- 2c0:	91 e0       	ldi	r25, 0x01	; 1
- 2c2:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
- 2c6:	3f c0       	rjmp	.+126    	; 0x346 <_Z14process_switchv+0x15e>
+				writeOutGSvalues(&actGSvalue);
+ 308:	cf 01       	movw	r24, r30
+ 30a:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <_Z16writeOutGSvaluesP8GSvalues>
+ 30e:	31 c0       	rjmp	.+98     	; 0x372 <_Z14process_switchv+0x124>
 			}
 		}
 		else
 		{
 			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&
- 2c8:	80 91 01 01 	lds	r24, 0x0101
- 2cc:	90 91 02 01 	lds	r25, 0x0102
- 2d0:	8f 3f       	cpi	r24, 0xFF	; 255
- 2d2:	91 05       	cpc	r25, r1
- 2d4:	c0 f1       	brcs	.+112    	; 0x346 <_Z14process_switchv+0x15e>
- 2d6:	20 91 03 01 	lds	r18, 0x0103
- 2da:	30 91 04 01 	lds	r19, 0x0104
- 2de:	2f 3f       	cpi	r18, 0xFF	; 255
- 2e0:	31 05       	cpc	r19, r1
- 2e2:	88 f1       	brcs	.+98     	; 0x346 <_Z14process_switchv+0x15e>
+ 310:	80 91 01 01 	lds	r24, 0x0101
+ 314:	90 91 02 01 	lds	r25, 0x0102
+ 318:	8f 3f       	cpi	r24, 0xFF	; 255
+ 31a:	91 05       	cpc	r25, r1
+ 31c:	50 f1       	brcs	.+84     	; 0x372 <_Z14process_switchv+0x124>
+ 31e:	20 91 03 01 	lds	r18, 0x0103
+ 322:	30 91 04 01 	lds	r19, 0x0104
+ 326:	2f 3f       	cpi	r18, 0xFF	; 255
+ 328:	31 05       	cpc	r19, r1
+ 32a:	18 f1       	brcs	.+70     	; 0x372 <_Z14process_switchv+0x124>
 			(actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
- 2e4:	60 91 05 01 	lds	r22, 0x0105
- 2e8:	70 91 06 01 	lds	r23, 0x0106
-				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
+ 32c:	40 91 05 01 	lds	r20, 0x0105
+ 330:	50 91 06 01 	lds	r21, 0x0106
+				writeOutGSvalues(&actGSvalue);
 			}
 		}
 		else
 		{
 			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&
- 2ec:	6f 3f       	cpi	r22, 0xFF	; 255
- 2ee:	71 05       	cpc	r23, r1
- 2f0:	50 f1       	brcs	.+84     	; 0x346 <_Z14process_switchv+0x15e>
+ 334:	4f 3f       	cpi	r20, 0xFF	; 255
+ 336:	51 05       	cpc	r21, r1
+ 338:	e0 f0       	brcs	.+56     	; 0x372 <_Z14process_switchv+0x124>
 			(actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
- 2f2:	e0 91 07 01 	lds	r30, 0x0107
- 2f6:	f0 91 08 01 	lds	r31, 0x0108
- 2fa:	ef 3f       	cpi	r30, 0xFF	; 255
- 2fc:	f1 05       	cpc	r31, r1
- 2fe:	18 f1       	brcs	.+70     	; 0x346 <_Z14process_switchv+0x15e>
+ 33a:	60 91 07 01 	lds	r22, 0x0107
+ 33e:	70 91 08 01 	lds	r23, 0x0108
+ 342:	6f 3f       	cpi	r22, 0xFF	; 255
+ 344:	71 05       	cpc	r23, r1
+ 346:	a8 f0       	brcs	.+42     	; 0x372 <_Z14process_switchv+0x124>
 			{
 				actGSvalue.coldW1 -= DIMM_STEP;
- 300:	ac 01       	movw	r20, r24
- 302:	4f 5f       	subi	r20, 0xFF	; 255
- 304:	51 09       	sbc	r21, r1
- 306:	c1 e0       	ldi	r28, 0x01	; 1
- 308:	d1 e0       	ldi	r29, 0x01	; 1
- 30a:	59 83       	std	Y+1, r21	; 0x01
- 30c:	48 83       	st	Y, r20
+ 348:	e1 e0       	ldi	r30, 0x01	; 1
+ 34a:	f1 e0       	ldi	r31, 0x01	; 1
+ 34c:	8f 5f       	subi	r24, 0xFF	; 255
+ 34e:	91 09       	sbc	r25, r1
+ 350:	91 83       	std	Z+1, r25	; 0x01
+ 352:	80 83       	st	Z, r24
 				actGSvalue.warmW1 -= DIMM_STEP;
- 30e:	2f 5f       	subi	r18, 0xFF	; 255
- 310:	31 09       	sbc	r19, r1
- 312:	3b 83       	std	Y+3, r19	; 0x03
- 314:	2a 83       	std	Y+2, r18	; 0x02
+ 354:	2f 5f       	subi	r18, 0xFF	; 255
+ 356:	31 09       	sbc	r19, r1
+ 358:	33 83       	std	Z+3, r19	; 0x03
+ 35a:	22 83       	std	Z+2, r18	; 0x02
 				actGSvalue.coldW2 -= DIMM_STEP;
- 316:	6f 5f       	subi	r22, 0xFF	; 255
- 318:	71 09       	sbc	r23, r1
- 31a:	7d 83       	std	Y+5, r23	; 0x05
- 31c:	6c 83       	std	Y+4, r22	; 0x04
+ 35c:	4f 5f       	subi	r20, 0xFF	; 255
+ 35e:	51 09       	sbc	r21, r1
+ 360:	55 83       	std	Z+5, r21	; 0x05
+ 362:	44 83       	std	Z+4, r20	; 0x04
 				actGSvalue.warmW2 -= DIMM_STEP;
- 31e:	ef 5f       	subi	r30, 0xFF	; 255
- 320:	f1 09       	sbc	r31, r1
- 322:	ff 83       	std	Y+7, r31	; 0x07
- 324:	ee 83       	std	Y+6, r30	; 0x06
+ 364:	6f 5f       	subi	r22, 0xFF	; 255
+ 366:	71 09       	sbc	r23, r1
+ 368:	77 83       	std	Z+7, r23	; 0x07
+ 36a:	66 83       	std	Z+6, r22	; 0x06
 						
 				//write out to chip
-				myChip.setGreyScale(3, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
- 326:	00 e0       	ldi	r16, 0x00	; 0
- 328:	10 e0       	ldi	r17, 0x00	; 0
- 32a:	63 e0       	ldi	r22, 0x03	; 3
- 32c:	81 e2       	ldi	r24, 0x21	; 33
- 32e:	91 e0       	ldi	r25, 0x01	; 1
- 330:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
-				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
- 334:	2e 81       	ldd	r18, Y+6	; 0x06
- 336:	3f 81       	ldd	r19, Y+7	; 0x07
- 338:	4c 81       	ldd	r20, Y+4	; 0x04
- 33a:	5d 81       	ldd	r21, Y+5	; 0x05
- 33c:	62 e0       	ldi	r22, 0x02	; 2
- 33e:	81 e2       	ldi	r24, 0x21	; 33
- 340:	91 e0       	ldi	r25, 0x01	; 1
- 342:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
+				writeOutGSvalues(&actGSvalue);
+ 36c:	cf 01       	movw	r24, r30
+ 36e:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <_Z16writeOutGSvaluesP8GSvalues>
 			}
 		}
 	}
 			
 	if(get_key_release( (1<<KEY0) ))
- 346:	88 e0       	ldi	r24, 0x08	; 8
- 348:	0e 94 7d 00 	call	0xfa	; 0xfa <_Z15get_key_releaseh>
- 34c:	88 23       	and	r24, r24
- 34e:	31 f0       	breq	.+12     	; 0x35c <_Z14process_switchv+0x174>
+ 372:	88 e0       	ldi	r24, 0x08	; 8
+ 374:	0e 94 7d 00 	call	0xfa	; 0xfa <_Z15get_key_releaseh>
+ 378:	88 23       	and	r24, r24
+ 37a:	31 f0       	breq	.+12     	; 0x388 <_Z14process_switchv+0x13a>
 	{
 		dimm_direc = !dimm_direc;	//toggle dimming direction
- 350:	90 91 00 01 	lds	r25, 0x0100
- 354:	81 e0       	ldi	r24, 0x01	; 1
- 356:	89 27       	eor	r24, r25
- 358:	80 93 00 01 	sts	0x0100, r24
-	}
-			
-}
- 35c:	df 91       	pop	r29
- 35e:	cf 91       	pop	r28
- 360:	1f 91       	pop	r17
- 362:	0f 91       	pop	r16
- 364:	08 95       	ret
+ 37c:	90 91 00 01 	lds	r25, 0x0100
+ 380:	81 e0       	ldi	r24, 0x01	; 1
+ 382:	89 27       	eor	r24, r25
+ 384:	80 93 00 01 	sts	0x0100, r24
+ 388:	08 95       	ret
 
-00000366 <main>:
-
-int main(void)
-{
-
+0000038a <main>:
+	//BTM222 Reset Configuration (not needed because of internal Pullup of the BTM222)
+	/*DDRB |= (1<<PB1);
+	PORTB |= (1<<PB1);		//high -> no Reset
+	PORTB &= ~(1<<PB1);		//low  -> Reset   */
 
 	SPI_init();
- 366:	0e 94 4a 02 	call	0x494	; 0x494 <_Z8SPI_initv>
+ 38a:	0e 94 4a 02 	call	0x494	; 0x494 <_Z8SPI_initv>
 	USART_Init(BAUDRATE);
- 36a:	83 e3       	ldi	r24, 0x33	; 51
- 36c:	90 e0       	ldi	r25, 0x00	; 0
- 36e:	0e 94 53 03 	call	0x6a6	; 0x6a6 <_Z10USART_Initj>
+ 38e:	83 e3       	ldi	r24, 0x33	; 51
+ 390:	90 e0       	ldi	r25, 0x00	; 0
+ 392:	0e 94 53 03 	call	0x6a6	; 0x6a6 <_Z10USART_Initj>
 
 
 	//Configuration Timer0 (debouncing)
 	TCCR0B = (1<<CS02)|(1<<CS00);	// divide by 1024
- 372:	85 e0       	ldi	r24, 0x05	; 5
- 374:	85 bd       	out	0x25, r24	; 37
+ 396:	85 e0       	ldi	r24, 0x05	; 5
+ 398:	85 bd       	out	0x25, r24	; 37
 	TIMSK0 |= (1 << TOIE0);			// enable timer interrupt
- 376:	ee e6       	ldi	r30, 0x6E	; 110
- 378:	f0 e0       	ldi	r31, 0x00	; 0
- 37a:	80 81       	ld	r24, Z
- 37c:	81 60       	ori	r24, 0x01	; 1
- 37e:	80 83       	st	Z, r24
+ 39a:	ee e6       	ldi	r30, 0x6E	; 110
+ 39c:	f0 e0       	ldi	r31, 0x00	; 0
+ 39e:	80 81       	ld	r24, Z
+ 3a0:	81 60       	ori	r24, 0x01	; 1
+ 3a2:	80 83       	st	Z, r24
 	
 	DDRB  |= (1 << PORTB0 );		//PB0 is output (LED)
- 380:	20 9a       	sbi	0x04, 0	; 4
+ 3a4:	20 9a       	sbi	0x04, 0	; 4
 	PORTB |= (1 <<PORTB0);			//Switch LED on
- 382:	28 9a       	sbi	0x05, 0	; 5
+ 3a6:	28 9a       	sbi	0x05, 0	; 5
 		
 	PORTD |= (1<<PORTD3);			//Activate Pullups for PD3 (Switch)
- 384:	5b 9a       	sbi	0x0b, 3	; 11
-	PORTB |= (1<<PB1);		//high -> no Reset
-	PORTB &= ~(1<<PB1);		//low  -> Reset   */
+ 3a8:	5b 9a       	sbi	0x0b, 3	; 11
 	
+	switch_CSet(CSet);				//Color set 0 ist default at startup
+ 3aa:	80 91 59 01 	lds	r24, 0x0159
+ 3ae:	0e 94 12 01 	call	0x224	; 0x224 <_Z11switch_CSeth>
 
 	int faktor =257;
-	myChip.setGreyScale(2, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
- 386:	c1 e0       	ldi	r28, 0x01	; 1
- 388:	d1 e0       	ldi	r29, 0x01	; 1
- 38a:	2a 81       	ldd	r18, Y+2	; 0x02
- 38c:	3b 81       	ldd	r19, Y+3	; 0x03
- 38e:	48 81       	ld	r20, Y
- 390:	59 81       	ldd	r21, Y+1	; 0x01
- 392:	00 e0       	ldi	r16, 0x00	; 0
- 394:	10 e0       	ldi	r17, 0x00	; 0
- 396:	62 e0       	ldi	r22, 0x02	; 2
- 398:	81 e2       	ldi	r24, 0x21	; 33
- 39a:	91 e0       	ldi	r25, 0x01	; 1
- 39c:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
-	myChip.setGreyScale(3, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
- 3a0:	2e 81       	ldd	r18, Y+6	; 0x06
- 3a2:	3f 81       	ldd	r19, Y+7	; 0x07
- 3a4:	4c 81       	ldd	r20, Y+4	; 0x04
- 3a6:	5d 81       	ldd	r21, Y+5	; 0x05
- 3a8:	63 e0       	ldi	r22, 0x03	; 3
- 3aa:	81 e2       	ldi	r24, 0x21	; 33
- 3ac:	91 e0       	ldi	r25, 0x01	; 1
- 3ae:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
+
+	
+	
 	sei();							//Enable Global Interrups (for USART)
  3b2:	78 94       	sei
  3b4:	0f 2e       	mov	r0, r31
@@ -649,13 +657,13 @@ int main(void)
     while (1) 
     {
 			
-		process_switch();
- 3ce:	0e 94 f4 00 	call	0x1e8	; 0x1e8 <_Z14process_switchv>
+		process_switch();			//collects the polling information from the button
+ 3ce:	0e 94 27 01 	call	0x24e	; 0x24e <_Z14process_switchv>
 		
 		if (DataInReceiveBuffer())
  3d2:	0e 94 c1 03 	call	0x782	; 0x782 <_Z19DataInReceiveBufferv>
  3d6:	88 23       	and	r24, r24
- 3d8:	d1 f3       	breq	.-12     	; 0x3ce <main+0x68>
+ 3d8:	d1 f3       	breq	.-12     	; 0x3ce <main+0x44>
  3da:	ea 2d       	mov	r30, r10
  3dc:	fb 2d       	mov	r31, r11
 		{
@@ -664,14 +672,14 @@ int main(void)
 				string[a] = 0;
  3de:	11 92       	st	Z+, r1
 			
-		process_switch();
+		process_switch();			//collects the polling information from the button
 		
 		if (DataInReceiveBuffer())
 		{
 			for (int a = 0 ; a<9 ; a++)
  3e0:	ec 17       	cp	r30, r28
  3e2:	fd 07       	cpc	r31, r29
- 3e4:	e1 f7       	brne	.-8      	; 0x3de <main+0x78>
+ 3e4:	e1 f7       	brne	.-8      	; 0x3de <main+0x54>
 			{
 				string[a] = 0;
 			}
@@ -679,7 +687,7 @@ int main(void)
 			if(USART_Receive() == 'a')
  3e6:	0e 94 b0 03 	call	0x760	; 0x760 <_Z13USART_Receivev>
  3ea:	81 36       	cpi	r24, 0x61	; 97
- 3ec:	81 f7       	brne	.-32     	; 0x3ce <main+0x68>
+ 3ec:	81 f7       	brne	.-32     	; 0x3ce <main+0x44>
 			{
 				USART_Receive();	//space
  3ee:	0e 94 b0 03 	call	0x760	; 0x760 <_Z13USART_Receivev>
@@ -717,7 +725,7 @@ int main(void)
 				while(tmp != '\n')
  42e:	4a 30       	cpi	r20, 0x0A	; 10
  430:	51 05       	cpc	r21, r1
- 432:	39 f7       	brne	.-50     	; 0x402 <main+0x9c>
+ 432:	39 f7       	brne	.-50     	; 0x402 <main+0x78>
 					tmp = USART_Receive();
 					string[i] = tmp;	
 					i++;
@@ -759,9 +767,9 @@ int main(void)
  474:	81 e2       	ldi	r24, 0x21	; 33
  476:	91 e0       	ldi	r25, 0x01	; 1
  478:	0e 94 25 03 	call	0x64a	; 0x64a <_ZN8TLC5971112setGreyScaleEhjjj>
- 47c:	a8 cf       	rjmp	.-176    	; 0x3ce <main+0x68>
+ 47c:	a8 cf       	rjmp	.-176    	; 0x3ce <main+0x44>
 
-0000047e <_GLOBAL__sub_I_NonVolatileChar>:
+0000047e <_GLOBAL__sub_I_GScSets>:
 			}
 		}
 	}
@@ -1469,8 +1477,28 @@ unsigned char DataInReceiveBuffer( void )
  7e8:	11 24       	eor	r1, r1
  7ea:	08 95       	ret
 
-000007ec <_exit>:
- 7ec:	f8 94       	cli
+000007ec <eeprom_read_block>:
+ 7ec:	dc 01       	movw	r26, r24
+ 7ee:	cb 01       	movw	r24, r22
 
-000007ee <__stop_program>:
- 7ee:	ff cf       	rjmp	.-2      	; 0x7ee <__stop_program>
+000007f0 <eeprom_read_blraw>:
+ 7f0:	fc 01       	movw	r30, r24
+ 7f2:	f9 99       	sbic	0x1f, 1	; 31
+ 7f4:	fe cf       	rjmp	.-4      	; 0x7f2 <eeprom_read_blraw+0x2>
+ 7f6:	06 c0       	rjmp	.+12     	; 0x804 <eeprom_read_blraw+0x14>
+ 7f8:	f2 bd       	out	0x22, r31	; 34
+ 7fa:	e1 bd       	out	0x21, r30	; 33
+ 7fc:	f8 9a       	sbi	0x1f, 0	; 31
+ 7fe:	31 96       	adiw	r30, 0x01	; 1
+ 800:	00 b4       	in	r0, 0x20	; 32
+ 802:	0d 92       	st	X+, r0
+ 804:	41 50       	subi	r20, 0x01	; 1
+ 806:	50 40       	sbci	r21, 0x00	; 0
+ 808:	b8 f7       	brcc	.-18     	; 0x7f8 <eeprom_read_blraw+0x8>
+ 80a:	08 95       	ret
+
+0000080c <_exit>:
+ 80c:	f8 94       	cli
+
+0000080e <__stop_program>:
+ 80e:	ff cf       	rjmp	.-2      	; 0x80e <__stop_program>
