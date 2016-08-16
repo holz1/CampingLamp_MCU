@@ -14,6 +14,7 @@
 #include <avr/interrupt.h>
 #include <stdlib.h>
 #include "inttypes.h"
+# include <avr/eeprom.h>
 
 #include "USART2.h"
 #include "spi.h"
@@ -26,13 +27,37 @@
 #define BAUDRATE 51			//19200 -> Refer Datasheet Page 190
 #define DIMM_STEP 0xFF		//Step for 1 Repeat of the debounce routine (can be set in debounce.h)
 #define MAX_GS_VAL	0xFFFF	//Maximum value for Greyscale
-#define NUM_OF_SETS	3	//Number of predefined Color Sets
+#define NUM_OF_SETS	5    	//Number of predefined Color Sets
+
+
+typedef struct {
+	uint16_t coldW1;			//coldWhite 1
+	uint16_t warmW1;			//warmWhite 1
+	uint16_t coldW2;			//coldWhite 2
+	uint16_t warmW2;			//warmWhite 2
+} GSvalues;
+
+uint8_t EEMEM NonVolatileChar ;
+uint16_t EEMEM NonVolatileInt ;
+uint8_t EEMEM NonVolatileString [10];
+
+
+
+//intital Greyscale Values
+GSvalues actGSvalue = {0xFF, 0xFF, 0xFF, 0xFF};
+	
+bool dimm_direc = true;			//true  = up
+//false = down
+
+uint8_t CSet = 0;				//Color Set
+
+TLC59711 myChip;
+
 char string[10];
 uint16_t val;
 int tmp;
 int i;
 int modus;
-
 
 ISR(TIMER0_OVF_vect)		// every 10ms for debouncing the switch
 {
@@ -62,20 +87,70 @@ void switch_CSet(uint8_t CSet)
 	
 }
 
+void process_switch(void)
+{
+	//Short Press recognized
+	if(get_key_short(1<<KEY0))
+	{
+		PORTB ^= (1<<PORTB0);
+		CSet++;
+		if (CSet == NUM_OF_SETS) CSet = 0;
+				
+		switch_CSet(CSet);
+	}
+			
+	//long press recognized (needed for correct behaviour of get_key_rpt_l() )
+	if( get_key_long_r( 1<<KEY0 ))
+	asm("nop");			//do nothing
+
+			
+	//Pressed an hold -> Dimming called every 50ms
+	if(get_key_rpt_l( 1<<KEY0 ))
+	{
+		//LED_PORT ^= (1<<PORTB0);
+		//All colors are treated the same
+		if(dimm_direc == true) //dimm up
+		{
+			if((actGSvalue.coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW1 <= (MAX_GS_VAL-DIMM_STEP)) &&
+			(actGSvalue.coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW2 <= (MAX_GS_VAL-DIMM_STEP)))
+			{
+				actGSvalue.coldW1 += DIMM_STEP;
+				actGSvalue.warmW1 += DIMM_STEP;
+				actGSvalue.coldW2 += DIMM_STEP;
+				actGSvalue.warmW2 += DIMM_STEP;
+						
+				//write out to chip
+				myChip.setGreyScale(3, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
+				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
+			}
+		}
+		else
+		{
+			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&
+			(actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
+			{
+				actGSvalue.coldW1 -= DIMM_STEP;
+				actGSvalue.warmW1 -= DIMM_STEP;
+				actGSvalue.coldW2 -= DIMM_STEP;
+				actGSvalue.warmW2 -= DIMM_STEP;
+						
+				//write out to chip
+				myChip.setGreyScale(3, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
+				myChip.setGreyScale(2, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
+			}
+		}
+	}
+			
+	if(get_key_release( (1<<KEY0) ))
+	{
+		dimm_direc = !dimm_direc;	//toggle dimming direction
+	}
+			
+}
+
 int main(void)
 {
-	//intital Greyscale Values
-	uint16_t coldW1 = 0xFF;			//coldWhite 1
-	uint16_t warmW1 = 0xFF;			//warmWhite 1
-	uint16_t coldW2 = 0xFF;			//coldWhite 2
-	uint16_t warmW2 = 0xFF;			//warmWhite 2
-	
-	bool dimm_direc = true;			//true  = up
-									//false = down				
 
-	uint8_t CSet = 0;				//Color Set
-
-	TLC59711 myChip;
 
 	SPI_init();
 	USART_Init(BAUDRATE);
@@ -98,69 +173,14 @@ int main(void)
 	
 
 	int faktor =257;
-	myChip.setGreyScale(2, coldW1, warmW1, 0x0);
-	myChip.setGreyScale(3, coldW2, warmW2, 0x0);
+	myChip.setGreyScale(2, actGSvalue.coldW1, actGSvalue.warmW1, 0x0);
+	myChip.setGreyScale(3, actGSvalue.coldW2, actGSvalue.warmW2, 0x0);
 	sei();							//Enable Global Interrups (for USART)
 	
     while (1) 
     {
-		//Short Press recognized
-		if(get_key_short(1<<KEY0))
-		{
-			PORTB ^= (1<<PORTB0);
-			CSet++;
-			if (CSet == NUM_OF_SETS) CSet = 0;
 			
-			switch_CSet(CSet);
-		}
-		
-		//long press recognized (needed for correct behaviour of get_key_rpt_l() )
-		if( get_key_long_r( 1<<KEY0 ))
-			asm("nop");			//do nothing
-
-		
-		//Pressed an hold -> Dimming called every 50ms
-		if(get_key_rpt_l( 1<<KEY0 ))
-		{	
-			//LED_PORT ^= (1<<PORTB0);
-			//All colors are treated the same
-			if(dimm_direc == true) //dimm up
-			{
-				if((coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (warmW1 <= (MAX_GS_VAL-DIMM_STEP)) && 
-				   (coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (warmW2 <= (MAX_GS_VAL-DIMM_STEP)))	
-				{
-					coldW1 += DIMM_STEP;
-					warmW1 += DIMM_STEP;
-					coldW2 += DIMM_STEP;
-					warmW2 += DIMM_STEP;
-									
-					//write out to chip
-					myChip.setGreyScale(3, coldW1, warmW1, 0x0);
-					myChip.setGreyScale(2, coldW2, warmW2, 0x0);
-				}
-			}
-			else
-			{
-				if((coldW1 >= DIMM_STEP) && (warmW1 >= DIMM_STEP) &&
-				   (coldW2 >= DIMM_STEP) && (warmW2 >= DIMM_STEP))	
-				{
-					coldW1 -= DIMM_STEP;
-					warmW1 -= DIMM_STEP;
-					coldW2 -= DIMM_STEP;
-					warmW2 -= DIMM_STEP;
-									
-					//write out to chip
-					myChip.setGreyScale(3, coldW1, warmW1, 0x0);
-					myChip.setGreyScale(2, coldW2, warmW2, 0x0);
-				}		
-			}			
-		}
-		
-		if(get_key_release( (1<<KEY0) ))
-		{
-			dimm_direc = !dimm_direc;	//toggle dimming direction
-		}
-						
+		process_switch();
 		
 		if (DataInReceiveBuffer())
 		{
