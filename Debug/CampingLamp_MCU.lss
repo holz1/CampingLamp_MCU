@@ -1,0 +1,1446 @@
+
+CampingLamp_MCU.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  000007fe  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         0000078a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          0000011b  00800100  00800100  000007fe  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000007fe  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000830  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000138  00000000  00000000  00000870  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000138f  00000000  00000000  000009a8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000007e2  00000000  00000000  00001d37  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   000005de  00000000  00000000  00002519  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000002d8  00000000  00000000  00002af8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    0000063b  00000000  00000000  00002dd0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000009dd  00000000  00000000  0000340b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 000000e8  00000000  00000000  00003de8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  38:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 80 00 	jmp	0x100	; 0x100 <__vector_16>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 39 03 	jmp	0x672	; 0x672 <__vector_18>
+  4c:	0c 94 59 03 	jmp	0x6b2	; 0x6b2 <__vector_19>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_clear_bss>:
+  74:	22 e0       	ldi	r18, 0x02	; 2
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
+
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	ab 31       	cpi	r26, 0x1B	; 27
+  80:	b2 07       	cpc	r27, r18
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	0e 94 dd 00 	call	0x1ba	; 0x1ba <main>
+  88:	0c 94 c3 03 	jmp	0x786	; 0x786 <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <_Z13get_key_pressh>:
+volatile uint8_t key_rpt;				// key long press and repeat
+
+
+uint8_t get_key_press( uint8_t key_mask )
+{
+	cli();								// read and clear atomic !
+  90:	f8 94       	cli
+	key_mask &= key_press;              // read key(s)
+  92:	90 91 02 01 	lds	r25, 0x0102
+  96:	89 23       	and	r24, r25
+	key_press ^= key_mask;              // clear key(s)
+  98:	90 91 02 01 	lds	r25, 0x0102
+  9c:	98 27       	eor	r25, r24
+  9e:	90 93 02 01 	sts	0x0102, r25
+	sei();
+  a2:	78 94       	sei
+	return key_mask;
+}
+  a4:	08 95       	ret
+
+000000a6 <_Z11get_key_rpth>:
+
+uint8_t get_key_rpt( uint8_t key_mask )
+{
+	cli();								// read and clear atomic !
+  a6:	f8 94       	cli
+	key_mask &= key_rpt;                // read key(s)
+  a8:	90 91 00 01 	lds	r25, 0x0100
+  ac:	89 23       	and	r24, r25
+	key_rpt ^= key_mask;                // clear key(s)
+  ae:	90 91 00 01 	lds	r25, 0x0100
+  b2:	98 27       	eor	r25, r24
+  b4:	90 93 00 01 	sts	0x0100, r25
+	sei();
+  b8:	78 94       	sei
+	return key_mask;
+}
+  ba:	08 95       	ret
+
+000000bc <_Z13get_key_shorth>:
+
+uint8_t get_key_short( uint8_t key_mask )
+{
+	cli();			// read key state and key press atomic !
+  bc:	f8 94       	cli
+	return get_key_press( ~key_state & key_mask );
+  be:	90 91 03 01 	lds	r25, 0x0103
+  c2:	90 95       	com	r25
+  c4:	89 23       	and	r24, r25
+  c6:	0e 94 48 00 	call	0x90	; 0x90 <_Z13get_key_pressh>
+}
+  ca:	08 95       	ret
+
+000000cc <_Z15get_key_releaseh>:
+	return get_key_press( get_key_rpt( key_mask ));
+}
+
+uint8_t get_key_release( uint8_t key_mask )
+{
+	cli();                     // read and clear atomic !
+  cc:	f8 94       	cli
+	key_mask &= key_release;   // read key(s)
+  ce:	90 91 01 01 	lds	r25, 0x0101
+  d2:	89 23       	and	r24, r25
+	key_release ^= key_mask;   // clear key(s)
+  d4:	90 91 01 01 	lds	r25, 0x0101
+  d8:	98 27       	eor	r25, r24
+  da:	90 93 01 01 	sts	0x0101, r25
+	sei();
+  de:	78 94       	sei
+	return key_mask;
+}
+  e0:	08 95       	ret
+
+000000e2 <_Z14get_key_long_rh>:
+
+uint8_t get_key_long_r( uint8_t key_mask )      // if repeat functionality for long press needed
+{
+  return get_key_press( get_key_rpt( key_press & key_mask ));
+  e2:	90 91 02 01 	lds	r25, 0x0102
+  e6:	89 23       	and	r24, r25
+  e8:	0e 94 53 00 	call	0xa6	; 0xa6 <_Z11get_key_rpth>
+  ec:	0e 94 48 00 	call	0x90	; 0x90 <_Z13get_key_pressh>
+}
+  f0:	08 95       	ret
+
+000000f2 <_Z13get_key_rpt_lh>:
+
+uint8_t get_key_rpt_l( uint8_t key_mask )       // if long press function with long press repeat functionality needed
+{
+  return get_key_rpt( ~key_press & key_mask );
+  f2:	90 91 02 01 	lds	r25, 0x0102
+  f6:	90 95       	com	r25
+  f8:	89 23       	and	r24, r25
+  fa:	0e 94 53 00 	call	0xa6	; 0xa6 <_Z11get_key_rpth>
+}
+  fe:	08 95       	ret
+
+00000100 <__vector_16>:
+int i;
+int modus;
+
+
+ISR(TIMER0_OVF_vect)		// every 10ms for debouncing the switch
+{
+ 100:	1f 92       	push	r1
+ 102:	0f 92       	push	r0
+ 104:	0f b6       	in	r0, 0x3f	; 63
+ 106:	0f 92       	push	r0
+ 108:	11 24       	eor	r1, r1
+ 10a:	2f 93       	push	r18
+ 10c:	3f 93       	push	r19
+ 10e:	4f 93       	push	r20
+ 110:	8f 93       	push	r24
+ 112:	9f 93       	push	r25
+	static uint8_t ct0, ct1, rpt;
+	uint8_t i;
+
+	TCNT0 = (uint8_t)(uint16_t)-(F_CPU / 1024 * 10e-3 + 0.5);	// preload for 10ms
+ 114:	16 bc       	out	0x26, r1	; 38
+
+	i = key_state ^ ~(KEY_PIN & 0x08);		// key changed ?
+ 116:	29 b1       	in	r18, 0x09	; 9
+ 118:	90 91 03 01 	lds	r25, 0x0103
+ 11c:	28 70       	andi	r18, 0x08	; 8
+ 11e:	20 95       	com	r18
+ 120:	29 27       	eor	r18, r25
+	ct0 = ~( ct0 & i );			// reset or count ct0
+ 122:	80 91 06 01 	lds	r24, 0x0106
+ 126:	82 23       	and	r24, r18
+ 128:	80 95       	com	r24
+ 12a:	80 93 06 01 	sts	0x0106, r24
+	ct1 = ct0 ^ (ct1 & i);		// reset or count ct1
+ 12e:	90 91 05 01 	lds	r25, 0x0105
+ 132:	92 23       	and	r25, r18
+ 134:	98 27       	eor	r25, r24
+ 136:	90 93 05 01 	sts	0x0105, r25
+ 13a:	82 23       	and	r24, r18
+	i &= ct0 & ct1;			// count until roll over ?
+ 13c:	89 23       	and	r24, r25
+	key_state ^= i;			// then toggle debounced state
+ 13e:	90 91 03 01 	lds	r25, 0x0103
+ 142:	98 27       	eor	r25, r24
+ 144:	90 93 03 01 	sts	0x0103, r25
+	key_press |= key_state & i;		// 0->1: key press detect
+ 148:	90 91 03 01 	lds	r25, 0x0103
+ 14c:	20 91 02 01 	lds	r18, 0x0102
+ 150:	98 23       	and	r25, r24
+ 152:	92 2b       	or	r25, r18
+ 154:	90 93 02 01 	sts	0x0102, r25
+	key_release |= ~key_state & i; // 1->0: key release detect
+ 158:	20 91 03 01 	lds	r18, 0x0103
+ 15c:	40 91 01 01 	lds	r20, 0x0101
+ 160:	90 e0       	ldi	r25, 0x00	; 0
+ 162:	30 e0       	ldi	r19, 0x00	; 0
+ 164:	20 95       	com	r18
+ 166:	30 95       	com	r19
+ 168:	82 23       	and	r24, r18
+ 16a:	93 23       	and	r25, r19
+ 16c:	84 2b       	or	r24, r20
+ 16e:	80 93 01 01 	sts	0x0101, r24
+	
+	if( (key_state & REPEAT_MASK) == 0 )	// check repeat function
+ 172:	80 91 03 01 	lds	r24, 0x0103
+ 176:	83 fd       	sbrc	r24, 3
+ 178:	04 c0       	rjmp	.+8      	; 0x182 <__vector_16+0x82>
+	rpt = REPEAT_START;		// start delay
+	if( --rpt == 0 ){
+ 17a:	81 e3       	ldi	r24, 0x31	; 49
+ 17c:	80 93 04 01 	sts	0x0104, r24
+ 180:	12 c0       	rjmp	.+36     	; 0x1a6 <__vector_16+0xa6>
+ 182:	80 91 04 01 	lds	r24, 0x0104
+ 186:	81 50       	subi	r24, 0x01	; 1
+ 188:	19 f0       	breq	.+6      	; 0x190 <__vector_16+0x90>
+ 18a:	80 93 04 01 	sts	0x0104, r24
+ 18e:	0b c0       	rjmp	.+22     	; 0x1a6 <__vector_16+0xa6>
+		rpt = REPEAT_NEXT;			// repeat delay
+ 190:	81 e0       	ldi	r24, 0x01	; 1
+ 192:	80 93 04 01 	sts	0x0104, r24
+		key_rpt |= key_state & REPEAT_MASK;
+ 196:	80 91 03 01 	lds	r24, 0x0103
+ 19a:	90 91 00 01 	lds	r25, 0x0100
+ 19e:	88 70       	andi	r24, 0x08	; 8
+ 1a0:	89 2b       	or	r24, r25
+ 1a2:	80 93 00 01 	sts	0x0100, r24
+	}
+}
+ 1a6:	9f 91       	pop	r25
+ 1a8:	8f 91       	pop	r24
+ 1aa:	4f 91       	pop	r20
+ 1ac:	3f 91       	pop	r19
+ 1ae:	2f 91       	pop	r18
+ 1b0:	0f 90       	pop	r0
+ 1b2:	0f be       	out	0x3f, r0	; 63
+ 1b4:	0f 90       	pop	r0
+ 1b6:	1f 90       	pop	r1
+ 1b8:	18 95       	reti
+
+000001ba <main>:
+{
+	
+}
+
+int main(void)
+{
+ 1ba:	cf 93       	push	r28
+ 1bc:	df 93       	push	r29
+ 1be:	cd b7       	in	r28, 0x3d	; 61
+ 1c0:	de b7       	in	r29, 0x3e	; 62
+ 1c2:	ea 97       	sbiw	r28, 0x3a	; 58
+ 1c4:	0f b6       	in	r0, 0x3f	; 63
+ 1c6:	f8 94       	cli
+ 1c8:	de bf       	out	0x3e, r29	; 62
+ 1ca:	0f be       	out	0x3f, r0	; 63
+ 1cc:	cd bf       	out	0x3d, r28	; 61
+	bool dimm_direc = true;			//true  = up
+									//false = down				
+
+	uint8_t CSet = 0;				//Color Set
+
+	TLC59711 myChip;
+ 1ce:	01 e0       	ldi	r16, 0x01	; 1
+ 1d0:	20 e0       	ldi	r18, 0x00	; 0
+ 1d2:	40 e0       	ldi	r20, 0x00	; 0
+ 1d4:	61 e0       	ldi	r22, 0x01	; 1
+ 1d6:	ce 01       	movw	r24, r28
+ 1d8:	01 96       	adiw	r24, 0x01	; 1
+ 1da:	0e 94 38 02 	call	0x470	; 0x470 <_ZN8TLC59711C1Ebbbb>
+
+	SPI_init();
+ 1de:	0e 94 1d 02 	call	0x43a	; 0x43a <_Z8SPI_initv>
+	USART_Init(BAUDRATE);
+ 1e2:	83 e3       	ldi	r24, 0x33	; 51
+ 1e4:	90 e0       	ldi	r25, 0x00	; 0
+ 1e6:	0e 94 26 03 	call	0x64c	; 0x64c <_Z10USART_Initj>
+
+
+	//Configuration Timer0 (debouncing)
+	TCCR0B = (1<<CS02)|(1<<CS00);	// divide by 1024
+ 1ea:	85 e0       	ldi	r24, 0x05	; 5
+ 1ec:	85 bd       	out	0x25, r24	; 37
+	TIMSK0 |= (1 << TOIE0);			// enable timer interrupt
+ 1ee:	ee e6       	ldi	r30, 0x6E	; 110
+ 1f0:	f0 e0       	ldi	r31, 0x00	; 0
+ 1f2:	80 81       	ld	r24, Z
+ 1f4:	81 60       	ori	r24, 0x01	; 1
+ 1f6:	80 83       	st	Z, r24
+	
+	DDRB  |= (1 << PORTB0 );		//PB0 is output (LED)
+ 1f8:	20 9a       	sbi	0x04, 0	; 4
+	PORTB |= (1 <<PORTB0);			//Switch LED on
+ 1fa:	28 9a       	sbi	0x05, 0	; 5
+		
+	PORTD |= (1<<PORTD3);			//Activate Pullups for PD3 (Switch)
+ 1fc:	5b 9a       	sbi	0x0b, 3	; 11
+	PORTB |= (1<<PB1);		//high -> no Reset
+	PORTB &= ~(1<<PB1);		//low  -> Reset   */
+	
+
+	int faktor =257;
+	myChip.setGreyScale(2, coldW1, warmW1, 0x0);
+ 1fe:	00 e0       	ldi	r16, 0x00	; 0
+ 200:	10 e0       	ldi	r17, 0x00	; 0
+ 202:	2f ef       	ldi	r18, 0xFF	; 255
+ 204:	30 e0       	ldi	r19, 0x00	; 0
+ 206:	4f ef       	ldi	r20, 0xFF	; 255
+ 208:	50 e0       	ldi	r21, 0x00	; 0
+ 20a:	62 e0       	ldi	r22, 0x02	; 2
+ 20c:	ce 01       	movw	r24, r28
+ 20e:	01 96       	adiw	r24, 0x01	; 1
+ 210:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+	myChip.setGreyScale(3, coldW2, warmW2, 0x0);
+ 214:	2f ef       	ldi	r18, 0xFF	; 255
+ 216:	30 e0       	ldi	r19, 0x00	; 0
+ 218:	4f ef       	ldi	r20, 0xFF	; 255
+ 21a:	50 e0       	ldi	r21, 0x00	; 0
+ 21c:	63 e0       	ldi	r22, 0x03	; 3
+ 21e:	ce 01       	movw	r24, r28
+ 220:	01 96       	adiw	r24, 0x01	; 1
+ 222:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+	sei();							//Enable Global Interrups (for USART)
+ 226:	78 94       	sei
+	uint16_t warmW2 = 0xFF;			//warmWhite 2
+	
+	bool dimm_direc = true;			//true  = up
+									//false = down				
+
+	uint8_t CSet = 0;				//Color Set
+ 228:	51 2c       	mov	r5, r1
+	uint16_t coldW1 = 0xFF;			//coldWhite 1
+	uint16_t warmW1 = 0xFF;			//warmWhite 1
+	uint16_t coldW2 = 0xFF;			//coldWhite 2
+	uint16_t warmW2 = 0xFF;			//warmWhite 2
+	
+	bool dimm_direc = true;			//true  = up
+ 22a:	44 24       	eor	r4, r4
+ 22c:	43 94       	inc	r4
+{
+	//intital Greyscale Values
+	uint16_t coldW1 = 0xFF;			//coldWhite 1
+	uint16_t warmW1 = 0xFF;			//warmWhite 1
+	uint16_t coldW2 = 0xFF;			//coldWhite 2
+	uint16_t warmW2 = 0xFF;			//warmWhite 2
+ 22e:	2f ef       	ldi	r18, 0xFF	; 255
+ 230:	30 e0       	ldi	r19, 0x00	; 0
+ 232:	3a af       	std	Y+58, r19	; 0x3a
+ 234:	29 af       	std	Y+57, r18	; 0x39
+int main(void)
+{
+	//intital Greyscale Values
+	uint16_t coldW1 = 0xFF;			//coldWhite 1
+	uint16_t warmW1 = 0xFF;			//warmWhite 1
+	uint16_t coldW2 = 0xFF;			//coldWhite 2
+ 236:	66 24       	eor	r6, r6
+ 238:	6a 94       	dec	r6
+ 23a:	71 2c       	mov	r7, r1
+
+int main(void)
+{
+	//intital Greyscale Values
+	uint16_t coldW1 = 0xFF;			//coldWhite 1
+	uint16_t warmW1 = 0xFF;			//warmWhite 1
+ 23c:	88 24       	eor	r8, r8
+ 23e:	8a 94       	dec	r8
+ 240:	91 2c       	mov	r9, r1
+}
+
+int main(void)
+{
+	//intital Greyscale Values
+	uint16_t coldW1 = 0xFF;			//coldWhite 1
+ 242:	aa 24       	eor	r10, r10
+ 244:	aa 94       	dec	r10
+ 246:	b1 2c       	mov	r11, r1
+    while (1) 
+    {
+		//Short Press recognized
+		if(get_key_short(1<<KEY0))
+		{
+			PORTB ^= (1<<PORTB0);
+ 248:	33 24       	eor	r3, r3
+ 24a:	33 94       	inc	r3
+			CSet++;
+			if (CSet == NUM_OF_SETS) CSet = 0;
+ 24c:	21 2c       	mov	r2, r1
+ 24e:	0f 2e       	mov	r0, r31
+ 250:	fd e0       	ldi	r31, 0x0D	; 13
+ 252:	cf 2e       	mov	r12, r31
+ 254:	f1 e0       	ldi	r31, 0x01	; 1
+ 256:	df 2e       	mov	r13, r31
+ 258:	f0 2d       	mov	r31, r0
+ 25a:	0f 2e       	mov	r0, r31
+ 25c:	f6 e1       	ldi	r31, 0x16	; 22
+ 25e:	ef 2e       	mov	r14, r31
+ 260:	f1 e0       	ldi	r31, 0x01	; 1
+ 262:	ff 2e       	mov	r15, r31
+ 264:	f0 2d       	mov	r31, r0
+	sei();							//Enable Global Interrups (for USART)
+	
+    while (1) 
+    {
+		//Short Press recognized
+		if(get_key_short(1<<KEY0))
+ 266:	88 e0       	ldi	r24, 0x08	; 8
+ 268:	0e 94 5e 00 	call	0xbc	; 0xbc <_Z13get_key_shorth>
+ 26c:	88 23       	and	r24, r24
+ 26e:	41 f0       	breq	.+16     	; 0x280 <main+0xc6>
+		{
+			PORTB ^= (1<<PORTB0);
+ 270:	85 b1       	in	r24, 0x05	; 5
+ 272:	83 25       	eor	r24, r3
+ 274:	85 b9       	out	0x05, r24	; 5
+			CSet++;
+ 276:	53 94       	inc	r5
+			if (CSet == NUM_OF_SETS) CSet = 0;
+ 278:	33 e0       	ldi	r19, 0x03	; 3
+ 27a:	53 12       	cpse	r5, r19
+ 27c:	01 c0       	rjmp	.+2      	; 0x280 <main+0xc6>
+ 27e:	52 2c       	mov	r5, r2
+			
+			switch_CSet(CSet);
+		}
+		
+		//long press recognized (needed for correct behaviour of get_key_rpt_l() )
+		if( get_key_long_r( 1<<KEY0 ))
+ 280:	88 e0       	ldi	r24, 0x08	; 8
+ 282:	0e 94 71 00 	call	0xe2	; 0xe2 <_Z14get_key_long_rh>
+ 286:	88 23       	and	r24, r24
+ 288:	09 f0       	breq	.+2      	; 0x28c <main+0xd2>
+			asm("nop");			//do nothing
+ 28a:	00 00       	nop
+
+		
+		//Pressed an hold -> Dimming called every 50ms
+		if(get_key_rpt_l( 1<<KEY0 ))
+ 28c:	88 e0       	ldi	r24, 0x08	; 8
+ 28e:	0e 94 79 00 	call	0xf2	; 0xf2 <_Z13get_key_rpt_lh>
+ 292:	88 23       	and	r24, r24
+ 294:	09 f4       	brne	.+2      	; 0x298 <main+0xde>
+ 296:	6c c0       	rjmp	.+216    	; 0x370 <main+0x1b6>
+		{	
+			//LED_PORT ^= (1<<PORTB0);
+			//All colors are treated the same
+			if(dimm_direc == true) //dimm up
+ 298:	44 20       	and	r4, r4
+ 29a:	c9 f1       	breq	.+114    	; 0x30e <main+0x154>
+			{
+				if((coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (warmW1 <= (MAX_GS_VAL-DIMM_STEP)) && 
+ 29c:	81 e0       	ldi	r24, 0x01	; 1
+ 29e:	a8 16       	cp	r10, r24
+ 2a0:	8f ef       	ldi	r24, 0xFF	; 255
+ 2a2:	b8 06       	cpc	r11, r24
+ 2a4:	08 f0       	brcs	.+2      	; 0x2a8 <main+0xee>
+ 2a6:	64 c0       	rjmp	.+200    	; 0x370 <main+0x1b6>
+ 2a8:	91 e0       	ldi	r25, 0x01	; 1
+ 2aa:	89 16       	cp	r8, r25
+ 2ac:	9f ef       	ldi	r25, 0xFF	; 255
+ 2ae:	99 06       	cpc	r9, r25
+ 2b0:	08 f0       	brcs	.+2      	; 0x2b4 <main+0xfa>
+ 2b2:	5e c0       	rjmp	.+188    	; 0x370 <main+0x1b6>
+ 2b4:	21 e0       	ldi	r18, 0x01	; 1
+ 2b6:	62 16       	cp	r6, r18
+ 2b8:	2f ef       	ldi	r18, 0xFF	; 255
+ 2ba:	72 06       	cpc	r7, r18
+ 2bc:	08 f0       	brcs	.+2      	; 0x2c0 <main+0x106>
+ 2be:	58 c0       	rjmp	.+176    	; 0x370 <main+0x1b6>
+				   (coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (warmW2 <= (MAX_GS_VAL-DIMM_STEP)))	
+ 2c0:	89 ad       	ldd	r24, Y+57	; 0x39
+ 2c2:	9a ad       	ldd	r25, Y+58	; 0x3a
+ 2c4:	81 30       	cpi	r24, 0x01	; 1
+ 2c6:	9f 4f       	sbci	r25, 0xFF	; 255
+ 2c8:	08 f0       	brcs	.+2      	; 0x2cc <main+0x112>
+ 2ca:	52 c0       	rjmp	.+164    	; 0x370 <main+0x1b6>
+				{
+					coldW1 += DIMM_STEP;
+ 2cc:	3f ef       	ldi	r19, 0xFF	; 255
+ 2ce:	a3 0e       	add	r10, r19
+ 2d0:	b1 1c       	adc	r11, r1
+					warmW1 += DIMM_STEP;
+ 2d2:	8f ef       	ldi	r24, 0xFF	; 255
+ 2d4:	88 0e       	add	r8, r24
+ 2d6:	91 1c       	adc	r9, r1
+					coldW2 += DIMM_STEP;
+ 2d8:	9f ef       	ldi	r25, 0xFF	; 255
+ 2da:	69 0e       	add	r6, r25
+ 2dc:	71 1c       	adc	r7, r1
+					warmW2 += DIMM_STEP;
+ 2de:	29 ad       	ldd	r18, Y+57	; 0x39
+ 2e0:	3a ad       	ldd	r19, Y+58	; 0x3a
+ 2e2:	21 50       	subi	r18, 0x01	; 1
+ 2e4:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2e6:	3a af       	std	Y+58, r19	; 0x3a
+ 2e8:	29 af       	std	Y+57, r18	; 0x39
+									
+					//write out to chip
+					myChip.setGreyScale(3, coldW1, warmW1, 0x0);
+ 2ea:	00 e0       	ldi	r16, 0x00	; 0
+ 2ec:	10 e0       	ldi	r17, 0x00	; 0
+ 2ee:	94 01       	movw	r18, r8
+ 2f0:	a5 01       	movw	r20, r10
+ 2f2:	63 e0       	ldi	r22, 0x03	; 3
+ 2f4:	ce 01       	movw	r24, r28
+ 2f6:	01 96       	adiw	r24, 0x01	; 1
+ 2f8:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+					myChip.setGreyScale(2, coldW2, warmW2, 0x0);
+ 2fc:	29 ad       	ldd	r18, Y+57	; 0x39
+ 2fe:	3a ad       	ldd	r19, Y+58	; 0x3a
+ 300:	a3 01       	movw	r20, r6
+ 302:	62 e0       	ldi	r22, 0x02	; 2
+ 304:	ce 01       	movw	r24, r28
+ 306:	01 96       	adiw	r24, 0x01	; 1
+ 308:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+ 30c:	31 c0       	rjmp	.+98     	; 0x370 <main+0x1b6>
+				}
+			}
+			else
+			{
+				if((coldW1 >= DIMM_STEP) && (warmW1 >= DIMM_STEP) &&
+ 30e:	3f ef       	ldi	r19, 0xFF	; 255
+ 310:	a3 16       	cp	r10, r19
+ 312:	b1 04       	cpc	r11, r1
+ 314:	68 f1       	brcs	.+90     	; 0x370 <main+0x1b6>
+ 316:	8f ef       	ldi	r24, 0xFF	; 255
+ 318:	88 16       	cp	r8, r24
+ 31a:	91 04       	cpc	r9, r1
+ 31c:	48 f1       	brcs	.+82     	; 0x370 <main+0x1b6>
+ 31e:	9f ef       	ldi	r25, 0xFF	; 255
+ 320:	69 16       	cp	r6, r25
+ 322:	71 04       	cpc	r7, r1
+ 324:	28 f1       	brcs	.+74     	; 0x370 <main+0x1b6>
+				   (coldW2 >= DIMM_STEP) && (warmW2 >= DIMM_STEP))	
+ 326:	29 ad       	ldd	r18, Y+57	; 0x39
+ 328:	3a ad       	ldd	r19, Y+58	; 0x3a
+ 32a:	2f 3f       	cpi	r18, 0xFF	; 255
+ 32c:	31 05       	cpc	r19, r1
+ 32e:	00 f1       	brcs	.+64     	; 0x370 <main+0x1b6>
+				{
+					coldW1 -= DIMM_STEP;
+ 330:	3f ef       	ldi	r19, 0xFF	; 255
+ 332:	a3 1a       	sub	r10, r19
+ 334:	b1 08       	sbc	r11, r1
+					warmW1 -= DIMM_STEP;
+ 336:	8f ef       	ldi	r24, 0xFF	; 255
+ 338:	88 1a       	sub	r8, r24
+ 33a:	91 08       	sbc	r9, r1
+					coldW2 -= DIMM_STEP;
+ 33c:	9f ef       	ldi	r25, 0xFF	; 255
+ 33e:	69 1a       	sub	r6, r25
+ 340:	71 08       	sbc	r7, r1
+					warmW2 -= DIMM_STEP;
+ 342:	29 ad       	ldd	r18, Y+57	; 0x39
+ 344:	3a ad       	ldd	r19, Y+58	; 0x3a
+ 346:	2f 5f       	subi	r18, 0xFF	; 255
+ 348:	31 09       	sbc	r19, r1
+ 34a:	3a af       	std	Y+58, r19	; 0x3a
+ 34c:	29 af       	std	Y+57, r18	; 0x39
+									
+					//write out to chip
+					myChip.setGreyScale(3, coldW1, warmW1, 0x0);
+ 34e:	00 e0       	ldi	r16, 0x00	; 0
+ 350:	10 e0       	ldi	r17, 0x00	; 0
+ 352:	94 01       	movw	r18, r8
+ 354:	a5 01       	movw	r20, r10
+ 356:	63 e0       	ldi	r22, 0x03	; 3
+ 358:	ce 01       	movw	r24, r28
+ 35a:	01 96       	adiw	r24, 0x01	; 1
+ 35c:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+					myChip.setGreyScale(2, coldW2, warmW2, 0x0);
+ 360:	29 ad       	ldd	r18, Y+57	; 0x39
+ 362:	3a ad       	ldd	r19, Y+58	; 0x3a
+ 364:	a3 01       	movw	r20, r6
+ 366:	62 e0       	ldi	r22, 0x02	; 2
+ 368:	ce 01       	movw	r24, r28
+ 36a:	01 96       	adiw	r24, 0x01	; 1
+ 36c:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+				}		
+			}			
+		}
+		
+		if(get_key_release( (1<<KEY0) ))
+ 370:	88 e0       	ldi	r24, 0x08	; 8
+ 372:	0e 94 66 00 	call	0xcc	; 0xcc <_Z15get_key_releaseh>
+ 376:	88 23       	and	r24, r24
+ 378:	09 f4       	brne	.+2      	; 0x37c <main+0x1c2>
+ 37a:	47 c0       	rjmp	.+142    	; 0x40a <main+0x250>
+		{
+			dimm_direc = !dimm_direc;	//toggle dimming direction
+ 37c:	43 24       	eor	r4, r3
+ 37e:	45 c0       	rjmp	.+138    	; 0x40a <main+0x250>
+		
+		if (DataInReceiveBuffer())
+		{
+			for (int a = 0 ; a<9 ; a++)
+			{
+				string[a] = 0;
+ 380:	11 92       	st	Z+, r1
+		}
+						
+		
+		if (DataInReceiveBuffer())
+		{
+			for (int a = 0 ; a<9 ; a++)
+ 382:	ee 15       	cp	r30, r14
+ 384:	ff 05       	cpc	r31, r15
+ 386:	e1 f7       	brne	.-8      	; 0x380 <main+0x1c6>
+ 388:	52 c0       	rjmp	.+164    	; 0x42e <main+0x274>
+				USART_Receive();	//space
+				i = 0;
+				tmp = 0;
+				while(tmp != '\n')
+				{
+					tmp = USART_Receive();
+ 38a:	0e 94 83 03 	call	0x706	; 0x706 <_Z13USART_Receivev>
+ 38e:	48 2f       	mov	r20, r24
+ 390:	50 e0       	ldi	r21, 0x00	; 0
+ 392:	50 93 0a 01 	sts	0x010A, r21
+ 396:	40 93 09 01 	sts	0x0109, r20
+					string[i] = tmp;	
+ 39a:	20 91 07 01 	lds	r18, 0x0107
+ 39e:	30 91 08 01 	lds	r19, 0x0108
+ 3a2:	f9 01       	movw	r30, r18
+ 3a4:	e3 5f       	subi	r30, 0xF3	; 243
+ 3a6:	fe 4f       	sbci	r31, 0xFE	; 254
+ 3a8:	80 83       	st	Z, r24
+					i++;
+ 3aa:	2f 5f       	subi	r18, 0xFF	; 255
+ 3ac:	3f 4f       	sbci	r19, 0xFF	; 255
+ 3ae:	30 93 08 01 	sts	0x0108, r19
+ 3b2:	20 93 07 01 	sts	0x0107, r18
+			if(USART_Receive() == 'a')
+			{
+				USART_Receive();	//space
+				i = 0;
+				tmp = 0;
+				while(tmp != '\n')
+ 3b6:	4a 30       	cpi	r20, 0x0A	; 10
+ 3b8:	51 05       	cpc	r21, r1
+ 3ba:	39 f7       	brne	.-50     	; 0x38a <main+0x1d0>
+					tmp = USART_Receive();
+					string[i] = tmp;	
+					i++;
+				}
+				
+				string[i] =  '\0';
+ 3bc:	f9 01       	movw	r30, r18
+ 3be:	e3 5f       	subi	r30, 0xF3	; 243
+ 3c0:	fe 4f       	sbci	r31, 0xFE	; 254
+ 3c2:	10 82       	st	Z, r1
+				
+				val = atoi(string);
+ 3c4:	c6 01       	movw	r24, r12
+ 3c6:	0e 94 9d 03 	call	0x73a	; 0x73a <atoi>
+				val = faktor*val;
+ 3ca:	21 e0       	ldi	r18, 0x01	; 1
+ 3cc:	31 e0       	ldi	r19, 0x01	; 1
+ 3ce:	82 9f       	mul	r24, r18
+ 3d0:	a0 01       	movw	r20, r0
+ 3d2:	83 9f       	mul	r24, r19
+ 3d4:	50 0d       	add	r21, r0
+ 3d6:	92 9f       	mul	r25, r18
+ 3d8:	50 0d       	add	r21, r0
+ 3da:	11 24       	eor	r1, r1
+ 3dc:	50 93 0c 01 	sts	0x010C, r21
+ 3e0:	40 93 0b 01 	sts	0x010B, r20
+				
+				myChip.setGreyScale(3, val, val, val);
+ 3e4:	8a 01       	movw	r16, r20
+ 3e6:	9a 01       	movw	r18, r20
+ 3e8:	63 e0       	ldi	r22, 0x03	; 3
+ 3ea:	ce 01       	movw	r24, r28
+ 3ec:	01 96       	adiw	r24, 0x01	; 1
+ 3ee:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+				myChip.setGreyScale(2, val, val, val);
+ 3f2:	40 91 0b 01 	lds	r20, 0x010B
+ 3f6:	50 91 0c 01 	lds	r21, 0x010C
+ 3fa:	8a 01       	movw	r16, r20
+ 3fc:	9a 01       	movw	r18, r20
+ 3fe:	62 e0       	ldi	r22, 0x02	; 2
+ 400:	ce 01       	movw	r24, r28
+ 402:	01 96       	adiw	r24, 0x01	; 1
+ 404:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <_ZN8TLC5971112setGreyScaleEhjjj>
+ 408:	2e cf       	rjmp	.-420    	; 0x266 <main+0xac>
+		{
+			dimm_direc = !dimm_direc;	//toggle dimming direction
+		}
+						
+		
+		if (DataInReceiveBuffer())
+ 40a:	0e 94 94 03 	call	0x728	; 0x728 <_Z19DataInReceiveBufferv>
+ 40e:	88 23       	and	r24, r24
+ 410:	09 f4       	brne	.+2      	; 0x414 <main+0x25a>
+ 412:	29 cf       	rjmp	.-430    	; 0x266 <main+0xac>
+ 414:	f6 01       	movw	r30, r12
+ 416:	b4 cf       	rjmp	.-152    	; 0x380 <main+0x1c6>
+				string[a] = 0;
+			}
+			
+			if(USART_Receive() == 'a')
+			{
+				USART_Receive();	//space
+ 418:	0e 94 83 03 	call	0x706	; 0x706 <_Z13USART_Receivev>
+				i = 0;
+ 41c:	10 92 08 01 	sts	0x0108, r1
+ 420:	10 92 07 01 	sts	0x0107, r1
+				tmp = 0;
+ 424:	10 92 0a 01 	sts	0x010A, r1
+ 428:	10 92 09 01 	sts	0x0109, r1
+ 42c:	ae cf       	rjmp	.-164    	; 0x38a <main+0x1d0>
+			for (int a = 0 ; a<9 ; a++)
+			{
+				string[a] = 0;
+			}
+			
+			if(USART_Receive() == 'a')
+ 42e:	0e 94 83 03 	call	0x706	; 0x706 <_Z13USART_Receivev>
+ 432:	81 36       	cpi	r24, 0x61	; 97
+ 434:	09 f0       	breq	.+2      	; 0x438 <main+0x27e>
+ 436:	17 cf       	rjmp	.-466    	; 0x266 <main+0xac>
+ 438:	ef cf       	rjmp	.-34     	; 0x418 <main+0x25e>
+
+0000043a <_Z8SPI_initv>:
+#include "spi.h"
+
+void SPI_init(void)
+{
+	/* Set MOSI and SCK output, all others input */
+	DDRB = (1<<PB3)|(1<<PB5)|(1<<PB2);		//DDRB The Port B Data Direction Register (1 = Output)
+ 43a:	8c e2       	ldi	r24, 0x2C	; 44
+ 43c:	84 b9       	out	0x04, r24	; 4
+	// PB3 = 3 = MOSI ; PB5 = 5 = SCK ; PB2 = SS
+	
+	/* Enable SPI, set Master, set clock rate fclk/4 */
+	SPCR = (1<<SPE)|(1<<MSTR)|(0<<SPR0);
+ 43e:	80 e5       	ldi	r24, 0x50	; 80
+ 440:	8c bd       	out	0x2c, r24	; 44
+	
+	//Set SS to high (not active)
+	PORTB |= (1 << PB2);
+ 442:	2a 9a       	sbi	0x05, 2	; 5
+ 444:	08 95       	ret
+
+00000446 <_Z15SPI_transfairnbPhi>:
+
+
+void SPI_transfairnb(uint8_t* cData, int len)
+{
+	/* Start transmission */
+	PORTB &= ~(1<<PB2);								// set SS to low
+ 446:	2a 98       	cbi	0x05, 2	; 5
+	
+	for (int i = 0 ; i < len ; i++)
+ 448:	16 16       	cp	r1, r22
+ 44a:	17 06       	cpc	r1, r23
+ 44c:	7c f4       	brge	.+30     	; 0x46c <_Z15SPI_transfairnbPhi+0x26>
+ 44e:	fc 01       	movw	r30, r24
+ 450:	68 0f       	add	r22, r24
+ 452:	79 1f       	adc	r23, r25
+ 454:	df 01       	movw	r26, r30
+	{
+		SPDR = *(cData + i);						//SPDR = SPI Data Register
+ 456:	90 81       	ld	r25, Z
+ 458:	9e bd       	out	0x2e, r25	; 46
+		
+		/* Wait for transmission complete */
+		while(!(SPSR & (1<<SPIF)));					// SPIF = SPI Interrupt Flag, gets set if the transmit is completed
+ 45a:	0d b4       	in	r0, 0x2d	; 45
+ 45c:	07 fe       	sbrs	r0, 7
+ 45e:	fd cf       	rjmp	.-6      	; 0x45a <_Z15SPI_transfairnbPhi+0x14>
+		*(cData + i) = SPDR;						// cleared by first reading the SPI Status Register with SPIF set, then accessing the SPDR
+ 460:	9e b5       	in	r25, 0x2e	; 46
+ 462:	9c 93       	st	X, r25
+ 464:	31 96       	adiw	r30, 0x01	; 1
+void SPI_transfairnb(uint8_t* cData, int len)
+{
+	/* Start transmission */
+	PORTB &= ~(1<<PB2);								// set SS to low
+	
+	for (int i = 0 ; i < len ; i++)
+ 466:	e6 17       	cp	r30, r22
+ 468:	f7 07       	cpc	r31, r23
+ 46a:	a1 f7       	brne	.-24     	; 0x454 <_Z15SPI_transfairnbPhi+0xe>
+		/* Wait for transmission complete */
+		while(!(SPSR & (1<<SPIF)));					// SPIF = SPI Interrupt Flag, gets set if the transmit is completed
+		*(cData + i) = SPDR;						// cleared by first reading the SPI Status Register with SPIF set, then accessing the SPDR
+	}
+	
+	PORTB |= (1<<PB2);								// set SS to high
+ 46c:	2a 9a       	sbi	0x05, 2	; 5
+ 46e:	08 95       	ret
+
+00000470 <_ZN8TLC59711C1Ebbbb>:
+#endif
+
+#include "TLC59711.h"
+#include <util/delay.h>
+
+TLC59711::TLC59711(bool OUTMMG,
+ 470:	0f 93       	push	r16
+ 472:	dc 01       	movw	r26, r24
+                   bool EXTGCK,
+                   bool TMGRST,
+                   bool DSPRPT) 
+{
+    control_data.write_cmd = 0x25;
+ 474:	8c 91       	ld	r24, X
+ 476:	80 7c       	andi	r24, 0xC0	; 192
+    
+    control_data.OUTMMG = OUTMMG;
+ 478:	85 62       	ori	r24, 0x25	; 37
+ 47a:	60 fb       	bst	r22, 0
+ 47c:	86 f9       	bld	r24, 6
+    control_data.EXTGCK = EXTGCK;
+ 47e:	40 fb       	bst	r20, 0
+ 480:	87 f9       	bld	r24, 7
+ 482:	8c 93       	st	X, r24
+    control_data.TMGRST = TMGRST;
+ 484:	11 96       	adiw	r26, 0x01	; 1
+ 486:	8c 91       	ld	r24, X
+ 488:	11 97       	sbiw	r26, 0x01	; 1
+ 48a:	20 fb       	bst	r18, 0
+ 48c:	80 f9       	bld	r24, 0
+    control_data.DSPRPT = DSPRPT;
+ 48e:	00 fb       	bst	r16, 0
+ 490:	81 f9       	bld	r24, 1
+    control_data.BLANK  = false;
+ 492:	83 70       	andi	r24, 0x03	; 3
+    
+    //Global Brightnes control -> all high (7Bit)
+    control_data.BCr = 0x7F;
+    control_data.BCg = 0x7F;
+ 494:	9f ef       	ldi	r25, 0xFF	; 255
+ 496:	13 96       	adiw	r26, 0x03	; 3
+ 498:	9c 93       	st	X, r25
+ 49a:	13 97       	sbiw	r26, 0x03	; 3
+    control_data.BCb = 0x7F;
+ 49c:	88 6f       	ori	r24, 0xF8	; 248
+ 49e:	11 96       	adiw	r26, 0x01	; 1
+ 4a0:	8c 93       	st	X, r24
+ 4a2:	11 97       	sbiw	r26, 0x01	; 1
+ 4a4:	12 96       	adiw	r26, 0x02	; 2
+ 4a6:	9c 93       	st	X, r25
+ 4a8:	12 97       	sbiw	r26, 0x02	; 2
+ 4aa:	fd 01       	movw	r30, r26
+ 4ac:	34 96       	adiw	r30, 0x04	; 4
+ 4ae:	cd 01       	movw	r24, r26
+ 4b0:	4c 96       	adiw	r24, 0x1c	; 28
+
+    
+    //Greyscale control 12 Channels -> all low
+    for (int i = 0 ; i <12 ; i++)
+    {
+        GS[i]  = 0;
+ 4b2:	11 92       	st	Z+, r1
+ 4b4:	11 92       	st	Z+, r1
+    control_data.BCg = 0x7F;
+    control_data.BCb = 0x7F;
+
+    
+    //Greyscale control 12 Channels -> all low
+    for (int i = 0 ; i <12 ; i++)
+ 4b6:	e8 17       	cp	r30, r24
+ 4b8:	f9 07       	cpc	r31, r25
+ 4ba:	d9 f7       	brne	.-10     	; 0x4b2 <_ZN8TLC59711C1Ebbbb+0x42>
+    {
+        GS[i]  = 0;
+    }
+}
+ 4bc:	0f 91       	pop	r16
+ 4be:	08 95       	ret
+
+000004c0 <_ZN8TLC5971113write_to_chipEv>:
+    }
+    write_to_chip();
+}
+
+void TLC59711::write_to_chip()
+{
+ 4c0:	cf 93       	push	r28
+ 4c2:	df 93       	push	r29
+ 4c4:	ac 01       	movw	r20, r24
+
+    //Flags
+    m_buffer[0] = (control_data.write_cmd << 2) | (control_data.OUTMMG << 1) | control_data.EXTGCK;
+ 4c6:	dc 01       	movw	r26, r24
+ 4c8:	8c 91       	ld	r24, X
+ 4ca:	98 2f       	mov	r25, r24
+ 4cc:	99 0f       	add	r25, r25
+ 4ce:	99 0f       	add	r25, r25
+ 4d0:	86 fb       	bst	r24, 6
+ 4d2:	22 27       	eor	r18, r18
+ 4d4:	20 f9       	bld	r18, 0
+ 4d6:	30 e0       	ldi	r19, 0x00	; 0
+ 4d8:	22 0f       	add	r18, r18
+ 4da:	33 1f       	adc	r19, r19
+ 4dc:	29 2b       	or	r18, r25
+ 4de:	87 fb       	bst	r24, 7
+ 4e0:	99 27       	eor	r25, r25
+ 4e2:	90 f9       	bld	r25, 0
+ 4e4:	82 2f       	mov	r24, r18
+ 4e6:	89 2b       	or	r24, r25
+ 4e8:	5c 96       	adiw	r26, 0x1c	; 28
+ 4ea:	8c 93       	st	X, r24
+ 4ec:	5c 97       	sbiw	r26, 0x1c	; 28
+    m_buffer[1] = (control_data.TMGRST << 7)    | (control_data.DSPRPT << 6) | (control_data.BLANK << 5);
+
+    //Global brightness - BC
+    m_buffer[1] |= control_data.BCb >> 2;
+ 4ee:	11 96       	adiw	r26, 0x01	; 1
+ 4f0:	8c 91       	ld	r24, X
+ 4f2:	11 97       	sbiw	r26, 0x01	; 1
+ 4f4:	98 2f       	mov	r25, r24
+ 4f6:	96 95       	lsr	r25
+ 4f8:	96 95       	lsr	r25
+ 4fa:	96 95       	lsr	r25
+ 4fc:	12 96       	adiw	r26, 0x02	; 2
+ 4fe:	2c 91       	ld	r18, X
+ 500:	62 2f       	mov	r22, r18
+ 502:	63 70       	andi	r22, 0x03	; 3
+ 504:	62 95       	swap	r22
+ 506:	66 0f       	add	r22, r22
+ 508:	60 7e       	andi	r22, 0xE0	; 224
+ 50a:	69 2b       	or	r22, r25
+ 50c:	70 e0       	ldi	r23, 0x00	; 0
+void TLC59711::write_to_chip()
+{
+
+    //Flags
+    m_buffer[0] = (control_data.write_cmd << 2) | (control_data.OUTMMG << 1) | control_data.EXTGCK;
+    m_buffer[1] = (control_data.TMGRST << 7)    | (control_data.DSPRPT << 6) | (control_data.BLANK << 5);
+ 50e:	81 fb       	bst	r24, 1
+ 510:	aa 27       	eor	r26, r26
+ 512:	a0 f9       	bld	r26, 0
+ 514:	b0 e0       	ldi	r27, 0x00	; 0
+ 516:	00 24       	eor	r0, r0
+ 518:	b6 95       	lsr	r27
+ 51a:	a7 95       	ror	r26
+ 51c:	07 94       	ror	r0
+ 51e:	b6 95       	lsr	r27
+ 520:	a7 95       	ror	r26
+ 522:	07 94       	ror	r0
+ 524:	ba 2f       	mov	r27, r26
+ 526:	a0 2d       	mov	r26, r0
+ 528:	98 2f       	mov	r25, r24
+ 52a:	97 95       	ror	r25
+ 52c:	99 27       	eor	r25, r25
+ 52e:	97 95       	ror	r25
+ 530:	a9 2b       	or	r26, r25
+ 532:	82 fb       	bst	r24, 2
+ 534:	ee 27       	eor	r30, r30
+ 536:	e0 f9       	bld	r30, 0
+ 538:	f0 e0       	ldi	r31, 0x00	; 0
+ 53a:	ee 0f       	add	r30, r30
+ 53c:	ff 1f       	adc	r31, r31
+ 53e:	e2 95       	swap	r30
+ 540:	f2 95       	swap	r31
+ 542:	f0 7f       	andi	r31, 0xF0	; 240
+ 544:	fe 27       	eor	r31, r30
+ 546:	e0 7f       	andi	r30, 0xF0	; 240
+ 548:	fe 27       	eor	r31, r30
+ 54a:	ea 2b       	or	r30, r26
+
+    //Global brightness - BC
+    m_buffer[1] |= control_data.BCb >> 2;
+ 54c:	cb 01       	movw	r24, r22
+ 54e:	95 95       	asr	r25
+ 550:	87 95       	ror	r24
+ 552:	95 95       	asr	r25
+ 554:	87 95       	ror	r24
+ 556:	e8 2b       	or	r30, r24
+ 558:	da 01       	movw	r26, r20
+ 55a:	5d 96       	adiw	r26, 0x1d	; 29
+ 55c:	ec 93       	st	X, r30
+ 55e:	5d 97       	sbiw	r26, 0x1d	; 29
+    m_buffer[2] = (control_data.BCb << 6) | control_data.BCg >> 1;
+ 560:	82 2f       	mov	r24, r18
+ 562:	86 95       	lsr	r24
+ 564:	86 95       	lsr	r24
+ 566:	13 96       	adiw	r26, 0x03	; 3
+ 568:	ec 91       	ld	r30, X
+ 56a:	13 97       	sbiw	r26, 0x03	; 3
+ 56c:	2e 2f       	mov	r18, r30
+ 56e:	21 70       	andi	r18, 0x01	; 1
+ 570:	22 95       	swap	r18
+ 572:	22 0f       	add	r18, r18
+ 574:	22 0f       	add	r18, r18
+ 576:	20 7c       	andi	r18, 0xC0	; 192
+ 578:	92 2f       	mov	r25, r18
+ 57a:	98 2b       	or	r25, r24
+ 57c:	29 2f       	mov	r18, r25
+ 57e:	30 e0       	ldi	r19, 0x00	; 0
+ 580:	c9 01       	movw	r24, r18
+ 582:	95 95       	asr	r25
+ 584:	87 95       	ror	r24
+ 586:	00 24       	eor	r0, r0
+ 588:	76 95       	lsr	r23
+ 58a:	67 95       	ror	r22
+ 58c:	07 94       	ror	r0
+ 58e:	76 95       	lsr	r23
+ 590:	67 95       	ror	r22
+ 592:	07 94       	ror	r0
+ 594:	76 2f       	mov	r23, r22
+ 596:	60 2d       	mov	r22, r0
+ 598:	68 2b       	or	r22, r24
+ 59a:	5e 96       	adiw	r26, 0x1e	; 30
+ 59c:	6c 93       	st	X, r22
+ 59e:	5e 97       	sbiw	r26, 0x1e	; 30
+    m_buffer[3] =  control_data.BCg << 7  | control_data.BCr;
+ 5a0:	36 95       	lsr	r19
+ 5a2:	32 2f       	mov	r19, r18
+ 5a4:	22 27       	eor	r18, r18
+ 5a6:	37 95       	ror	r19
+ 5a8:	27 95       	ror	r18
+ 5aa:	e6 95       	lsr	r30
+ 5ac:	2e 2b       	or	r18, r30
+ 5ae:	5f 96       	adiw	r26, 0x1f	; 31
+ 5b0:	2c 93       	st	X, r18
+ 5b2:	5f 97       	sbiw	r26, 0x1f	; 31
+ 5b4:	fa 01       	movw	r30, r20
+ 5b6:	7c 96       	adiw	r30, 0x1c	; 28
+ 5b8:	91 96       	adiw	r26, 0x21	; 33
+ 5ba:	ba 01       	movw	r22, r20
+ 5bc:	6c 5f       	subi	r22, 0xFC	; 252
+ 5be:	7f 4f       	sbci	r23, 0xFF	; 255
+ 5c0:	32 97       	sbiw	r30, 0x02	; 2
+    
+    //Greyscale - GS
+    int a = 11;
+    for (int i = 4 ; i < 28 ; i = i+2)
+    {
+        m_buffer[i] = GS[a] >> 8;
+ 5c2:	90 81       	ld	r25, Z
+ 5c4:	21 81       	ldd	r18, Z+1	; 0x01
+ 5c6:	ed 01       	movw	r28, r26
+ 5c8:	21 97       	sbiw	r28, 0x01	; 1
+ 5ca:	28 83       	st	Y, r18
+        m_buffer[i+1] = (GS[a]<< 8) >> 8;
+ 5cc:	9c 93       	st	X, r25
+ 5ce:	12 96       	adiw	r26, 0x02	; 2
+    m_buffer[2] = (control_data.BCb << 6) | control_data.BCg >> 1;
+    m_buffer[3] =  control_data.BCg << 7  | control_data.BCr;
+    
+    //Greyscale - GS
+    int a = 11;
+    for (int i = 4 ; i < 28 ; i = i+2)
+ 5d0:	e6 17       	cp	r30, r22
+ 5d2:	f7 07       	cpc	r31, r23
+ 5d4:	a9 f7       	brne	.-22     	; 0x5c0 <_ZN8TLC5971113write_to_chipEv+0x100>
+        m_buffer[i] = GS[a] >> 8;
+        m_buffer[i+1] = (GS[a]<< 8) >> 8;
+        a--;
+    }
+	
+	SPI_transfairnb(m_buffer, 28);
+ 5d6:	6c e1       	ldi	r22, 0x1C	; 28
+ 5d8:	70 e0       	ldi	r23, 0x00	; 0
+ 5da:	ca 01       	movw	r24, r20
+ 5dc:	4c 96       	adiw	r24, 0x1c	; 28
+ 5de:	0e 94 23 02 	call	0x446	; 0x446 <_Z15SPI_transfairnbPhi>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 5e2:	b5 e3       	ldi	r27, 0x35	; 53
+ 5e4:	ba 95       	dec	r27
+ 5e6:	f1 f7       	brne	.-4      	; 0x5e4 <_ZN8TLC5971113write_to_chipEv+0x124>
+ 5e8:	00 00       	nop
+//    //Greyscale - GS
+//    for (int i = 2 ; i < 14 ; i++)
+//    {
+//        m_buffer[i] = GS[i-2];
+//    }
+}
+ 5ea:	df 91       	pop	r29
+ 5ec:	cf 91       	pop	r28
+ 5ee:	08 95       	ret
+
+000005f0 <_ZN8TLC5971112setGreyScaleEhjjj>:
+    //bcm2835_close();
+//}
+
+
+void TLC59711::setGreyScale(uint8_t RGBgroup, uint16_t GSr, uint16_t GSg, uint16_t GSb)
+{
+ 5f0:	0f 93       	push	r16
+ 5f2:	1f 93       	push	r17
+    switch(RGBgroup)
+ 5f4:	61 30       	cpi	r22, 0x01	; 1
+ 5f6:	71 f0       	breq	.+28     	; 0x614 <_ZN8TLC5971112setGreyScaleEhjjj+0x24>
+ 5f8:	28 f0       	brcs	.+10     	; 0x604 <_ZN8TLC5971112setGreyScaleEhjjj+0x14>
+ 5fa:	62 30       	cpi	r22, 0x02	; 2
+ 5fc:	99 f0       	breq	.+38     	; 0x624 <_ZN8TLC5971112setGreyScaleEhjjj+0x34>
+ 5fe:	63 30       	cpi	r22, 0x03	; 3
+ 600:	c9 f0       	breq	.+50     	; 0x634 <_ZN8TLC5971112setGreyScaleEhjjj+0x44>
+ 602:	1f c0       	rjmp	.+62     	; 0x642 <_ZN8TLC5971112setGreyScaleEhjjj+0x52>
+    {
+        case 0:
+            GS[0]  = GSb;
+ 604:	fc 01       	movw	r30, r24
+ 606:	15 83       	std	Z+5, r17	; 0x05
+ 608:	04 83       	std	Z+4, r16	; 0x04
+            GS[1]  = GSg;
+ 60a:	37 83       	std	Z+7, r19	; 0x07
+ 60c:	26 83       	std	Z+6, r18	; 0x06
+            GS[2]  = GSr;
+ 60e:	51 87       	std	Z+9, r21	; 0x09
+ 610:	40 87       	std	Z+8, r20	; 0x08
+            break;
+ 612:	17 c0       	rjmp	.+46     	; 0x642 <_ZN8TLC5971112setGreyScaleEhjjj+0x52>
+        case 1:
+            GS[3]  = GSb;
+ 614:	fc 01       	movw	r30, r24
+ 616:	13 87       	std	Z+11, r17	; 0x0b
+ 618:	02 87       	std	Z+10, r16	; 0x0a
+            GS[4]  = GSg;
+ 61a:	35 87       	std	Z+13, r19	; 0x0d
+ 61c:	24 87       	std	Z+12, r18	; 0x0c
+            GS[5]  = GSr;
+ 61e:	57 87       	std	Z+15, r21	; 0x0f
+ 620:	46 87       	std	Z+14, r20	; 0x0e
+            break;
+ 622:	0f c0       	rjmp	.+30     	; 0x642 <_ZN8TLC5971112setGreyScaleEhjjj+0x52>
+        case 2:
+            GS[6]  = GSb;
+ 624:	fc 01       	movw	r30, r24
+ 626:	11 8b       	std	Z+17, r17	; 0x11
+ 628:	00 8b       	std	Z+16, r16	; 0x10
+            GS[7]  = GSg;
+ 62a:	33 8b       	std	Z+19, r19	; 0x13
+ 62c:	22 8b       	std	Z+18, r18	; 0x12
+            GS[8]  = GSr;
+ 62e:	55 8b       	std	Z+21, r21	; 0x15
+ 630:	44 8b       	std	Z+20, r20	; 0x14
+            break;
+ 632:	07 c0       	rjmp	.+14     	; 0x642 <_ZN8TLC5971112setGreyScaleEhjjj+0x52>
+        case 3:
+            GS[9]  = GSb;
+ 634:	fc 01       	movw	r30, r24
+ 636:	17 8b       	std	Z+23, r17	; 0x17
+ 638:	06 8b       	std	Z+22, r16	; 0x16
+            GS[10] = GSg;
+ 63a:	31 8f       	std	Z+25, r19	; 0x19
+ 63c:	20 8f       	std	Z+24, r18	; 0x18
+            GS[11] = GSr;
+ 63e:	53 8f       	std	Z+27, r21	; 0x1b
+ 640:	42 8f       	std	Z+26, r20	; 0x1a
+            break;
+        default:
+            break;
+    }
+    write_to_chip();
+ 642:	0e 94 60 02 	call	0x4c0	; 0x4c0 <_ZN8TLC5971113write_to_chipEv>
+}
+ 646:	1f 91       	pop	r17
+ 648:	0f 91       	pop	r16
+ 64a:	08 95       	ret
+
+0000064c <_Z10USART_Initj>:
+void USART_Init( unsigned int baudrate )
+{
+	unsigned char x;
+
+	/* Set the baud rate */
+	UBRR0H = (unsigned char) (baudrate>>8);                  
+ 64c:	90 93 c5 00 	sts	0x00C5, r25
+	UBRR0L = (unsigned char) baudrate;
+ 650:	80 93 c4 00 	sts	0x00C4, r24
+	
+	/* Enable UART receiver and transmitter */
+	UCSR0B = ( ( 1 << RXCIE0 ) | ( 1 << RXEN0 ) | ( 1 << TXEN0 ) ); 
+ 654:	88 e9       	ldi	r24, 0x98	; 152
+ 656:	80 93 c1 00 	sts	0x00C1, r24
+	
+	/* Set frame format: 8 data, no parity, 1 stop */
+	//UCSR0C = (1<<URSEL)|(0<<USBS)|(1<<UCSZ1)|(1<<UCSZ0); for atmega8
+	
+	/* Set frame format: 8 data, no parity, 1 stop */
+	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);
+ 65a:	86 e0       	ldi	r24, 0x06	; 6
+ 65c:	80 93 c2 00 	sts	0x00C2, r24
+	
+	
+	/* Flush receive buffer */
+	x = 0; 			    
+
+	USART_RxTail = x;
+ 660:	10 92 99 01 	sts	0x0199, r1
+	USART_RxHead = x;
+ 664:	10 92 9a 01 	sts	0x019A, r1
+	USART_TxTail = x;
+ 668:	10 92 17 01 	sts	0x0117, r1
+	USART_TxHead = x;
+ 66c:	10 92 18 01 	sts	0x0118, r1
+ 670:	08 95       	ret
+
+00000672 <__vector_18>:
+}
+
+/* Interrupt handlers */
+ISR(USART_RX_vect)
+{
+ 672:	1f 92       	push	r1
+ 674:	0f 92       	push	r0
+ 676:	0f b6       	in	r0, 0x3f	; 63
+ 678:	0f 92       	push	r0
+ 67a:	11 24       	eor	r1, r1
+ 67c:	8f 93       	push	r24
+ 67e:	9f 93       	push	r25
+ 680:	ef 93       	push	r30
+ 682:	ff 93       	push	r31
+	
+	unsigned char data;
+	unsigned char tmphead;
+
+	/* Read the received data */
+	data = UDR0;                 
+ 684:	80 91 c6 00 	lds	r24, 0x00C6
+	/* Calculate buffer index */
+	tmphead = ( USART_RxHead + 1 ) & USART_RX_BUFFER_MASK;
+ 688:	e0 91 9a 01 	lds	r30, 0x019A
+ 68c:	ef 5f       	subi	r30, 0xFF	; 255
+ 68e:	ef 77       	andi	r30, 0x7F	; 127
+	USART_RxHead = tmphead;      /* Store new index */
+ 690:	e0 93 9a 01 	sts	0x019A, r30
+
+	if ( tmphead == USART_RxTail )
+ 694:	90 91 99 01 	lds	r25, 0x0199
+	{
+		/* ERROR! Receive buffer overflow */
+	}
+	
+	USART_RxBuf[tmphead] = data; /* Store received data in buffer */
+ 698:	f0 e0       	ldi	r31, 0x00	; 0
+ 69a:	e5 56       	subi	r30, 0x65	; 101
+ 69c:	fe 4f       	sbci	r31, 0xFE	; 254
+ 69e:	80 83       	st	Z, r24
+}
+ 6a0:	ff 91       	pop	r31
+ 6a2:	ef 91       	pop	r30
+ 6a4:	9f 91       	pop	r25
+ 6a6:	8f 91       	pop	r24
+ 6a8:	0f 90       	pop	r0
+ 6aa:	0f be       	out	0x3f, r0	; 63
+ 6ac:	0f 90       	pop	r0
+ 6ae:	1f 90       	pop	r1
+ 6b0:	18 95       	reti
+
+000006b2 <__vector_19>:
+
+ISR(USART_UDRE_vect)
+{
+ 6b2:	1f 92       	push	r1
+ 6b4:	0f 92       	push	r0
+ 6b6:	0f b6       	in	r0, 0x3f	; 63
+ 6b8:	0f 92       	push	r0
+ 6ba:	11 24       	eor	r1, r1
+ 6bc:	8f 93       	push	r24
+ 6be:	9f 93       	push	r25
+ 6c0:	ef 93       	push	r30
+ 6c2:	ff 93       	push	r31
+	unsigned char tmptail;
+
+	/* Check if all data is transmitted */
+	if ( USART_TxHead != USART_TxTail )
+ 6c4:	90 91 18 01 	lds	r25, 0x0118
+ 6c8:	80 91 17 01 	lds	r24, 0x0117
+ 6cc:	98 17       	cp	r25, r24
+ 6ce:	69 f0       	breq	.+26     	; 0x6ea <__vector_19+0x38>
+	{
+		/* Calculate buffer index */
+		tmptail = ( USART_TxTail + 1 ) & USART_TX_BUFFER_MASK;
+ 6d0:	e0 91 17 01 	lds	r30, 0x0117
+ 6d4:	ef 5f       	subi	r30, 0xFF	; 255
+ 6d6:	ef 77       	andi	r30, 0x7F	; 127
+		USART_TxTail = tmptail;      /* Store new index */
+ 6d8:	e0 93 17 01 	sts	0x0117, r30
+	
+		UDR0 = USART_TxBuf[tmptail];  /* Start transmition */
+ 6dc:	f0 e0       	ldi	r31, 0x00	; 0
+ 6de:	e7 5e       	subi	r30, 0xE7	; 231
+ 6e0:	fe 4f       	sbci	r31, 0xFE	; 254
+ 6e2:	80 81       	ld	r24, Z
+ 6e4:	80 93 c6 00 	sts	0x00C6, r24
+ 6e8:	05 c0       	rjmp	.+10     	; 0x6f4 <__vector_19+0x42>
+	}
+	else
+	{
+		UCSR0B &= ~(1<<UDRIE0);         /* Disable UDRE interrupt */
+ 6ea:	e1 ec       	ldi	r30, 0xC1	; 193
+ 6ec:	f0 e0       	ldi	r31, 0x00	; 0
+ 6ee:	80 81       	ld	r24, Z
+ 6f0:	8f 7d       	andi	r24, 0xDF	; 223
+ 6f2:	80 83       	st	Z, r24
+	}
+}
+ 6f4:	ff 91       	pop	r31
+ 6f6:	ef 91       	pop	r30
+ 6f8:	9f 91       	pop	r25
+ 6fa:	8f 91       	pop	r24
+ 6fc:	0f 90       	pop	r0
+ 6fe:	0f be       	out	0x3f, r0	; 63
+ 700:	0f 90       	pop	r0
+ 702:	1f 90       	pop	r1
+ 704:	18 95       	reti
+
+00000706 <_Z13USART_Receivev>:
+/* Read and write functions */
+unsigned char USART_Receive( void )
+{
+	unsigned char tmptail;
+	
+	while ( USART_RxHead == USART_RxTail );  /* Wait for incomming data */
+ 706:	90 91 9a 01 	lds	r25, 0x019A
+ 70a:	80 91 99 01 	lds	r24, 0x0199
+ 70e:	98 17       	cp	r25, r24
+ 710:	d1 f3       	breq	.-12     	; 0x706 <_Z13USART_Receivev>
+		
+	tmptail = ( USART_RxTail + 1 ) & USART_RX_BUFFER_MASK;/* Calculate buffer index */
+ 712:	e0 91 99 01 	lds	r30, 0x0199
+ 716:	ef 5f       	subi	r30, 0xFF	; 255
+ 718:	ef 77       	andi	r30, 0x7F	; 127
+	
+	USART_RxTail = tmptail;                /* Store new index */
+ 71a:	e0 93 99 01 	sts	0x0199, r30
+	
+	return USART_RxBuf[tmptail];  /* Return data */
+ 71e:	f0 e0       	ldi	r31, 0x00	; 0
+ 720:	e5 56       	subi	r30, 0x65	; 101
+ 722:	fe 4f       	sbci	r31, 0xFE	; 254
+}
+ 724:	80 81       	ld	r24, Z
+ 726:	08 95       	ret
+
+00000728 <_Z19DataInReceiveBufferv>:
+	UCSR0B |= (1<<UDRIE0);                    /* Enable UDRE interrupt */
+}
+
+unsigned char DataInReceiveBuffer( void )
+{
+	return ( USART_RxHead != USART_RxTail ); /* Return 0 (FALSE) if the receive buffer is empty */
+ 728:	20 91 9a 01 	lds	r18, 0x019A
+ 72c:	90 91 99 01 	lds	r25, 0x0199
+ 730:	81 e0       	ldi	r24, 0x01	; 1
+ 732:	29 13       	cpse	r18, r25
+ 734:	01 c0       	rjmp	.+2      	; 0x738 <_Z19DataInReceiveBufferv+0x10>
+ 736:	80 e0       	ldi	r24, 0x00	; 0
+}
+ 738:	08 95       	ret
+
+0000073a <atoi>:
+ 73a:	fc 01       	movw	r30, r24
+ 73c:	88 27       	eor	r24, r24
+ 73e:	99 27       	eor	r25, r25
+ 740:	e8 94       	clt
+ 742:	21 91       	ld	r18, Z+
+ 744:	20 32       	cpi	r18, 0x20	; 32
+ 746:	e9 f3       	breq	.-6      	; 0x742 <atoi+0x8>
+ 748:	29 30       	cpi	r18, 0x09	; 9
+ 74a:	10 f0       	brcs	.+4      	; 0x750 <atoi+0x16>
+ 74c:	2e 30       	cpi	r18, 0x0E	; 14
+ 74e:	c8 f3       	brcs	.-14     	; 0x742 <atoi+0x8>
+ 750:	2b 32       	cpi	r18, 0x2B	; 43
+ 752:	41 f0       	breq	.+16     	; 0x764 <atoi+0x2a>
+ 754:	2d 32       	cpi	r18, 0x2D	; 45
+ 756:	39 f4       	brne	.+14     	; 0x766 <atoi+0x2c>
+ 758:	68 94       	set
+ 75a:	04 c0       	rjmp	.+8      	; 0x764 <atoi+0x2a>
+ 75c:	0e 94 bb 03 	call	0x776	; 0x776 <__mulhi_const_10>
+ 760:	82 0f       	add	r24, r18
+ 762:	91 1d       	adc	r25, r1
+ 764:	21 91       	ld	r18, Z+
+ 766:	20 53       	subi	r18, 0x30	; 48
+ 768:	2a 30       	cpi	r18, 0x0A	; 10
+ 76a:	c0 f3       	brcs	.-16     	; 0x75c <atoi+0x22>
+ 76c:	1e f4       	brtc	.+6      	; 0x774 <atoi+0x3a>
+ 76e:	90 95       	com	r25
+ 770:	81 95       	neg	r24
+ 772:	9f 4f       	sbci	r25, 0xFF	; 255
+ 774:	08 95       	ret
+
+00000776 <__mulhi_const_10>:
+ 776:	7a e0       	ldi	r23, 0x0A	; 10
+ 778:	97 9f       	mul	r25, r23
+ 77a:	90 2d       	mov	r25, r0
+ 77c:	87 9f       	mul	r24, r23
+ 77e:	80 2d       	mov	r24, r0
+ 780:	91 0d       	add	r25, r1
+ 782:	11 24       	eor	r1, r1
+ 784:	08 95       	ret
+
+00000786 <_exit>:
+ 786:	f8 94       	cli
+
+00000788 <__stop_program>:
+ 788:	ff cf       	rjmp	.-2      	; 0x788 <__stop_program>
