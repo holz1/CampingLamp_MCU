@@ -11,7 +11,8 @@
 * Support mail      : avr@atmel.com
 *
 * Supported devices : All devices with a SPI and USART module can be used.
-*                     The example is written for the ATmega8
+*                     The example is written for the ATmega8 
+					  ported for ATmega 328p by holzi
 *
 * AppNote           : AVR303 - SPI-UART Gateway
 *

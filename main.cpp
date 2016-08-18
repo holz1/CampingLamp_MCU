@@ -168,7 +168,7 @@ int main(void)
 	USART_Init(BAUDRATE);
 
 
-	//Configuration Timer0 (debouncing)
+	//Configuration Timer0 (used for debouncing)
 	TCCR0B = (1<<CS02)|(1<<CS00);	// divide by 1024
 	TIMSK0 |= (1 << TOIE0);			// enable timer interrupt
 	
@@ -179,13 +179,12 @@ int main(void)
 	
 	switch_CSet(CSet);				//Color set 0 ist default at startup
 	
-	
-
-	int faktor =257;
-
-	
-	
 	sei();							//Enable Global Interrups (for USART)
+		
+		
+		int faktor =257;
+
+	
 	
     while (1) 
     {
