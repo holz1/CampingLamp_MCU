@@ -21,34 +21,67 @@
 #include "TLC59711.h"
 #include "debounce.h"
 
-#define BAUDRATE    51			//19200 -> Refer Datasheet Page 190
-#define DIMM_STEP   0xFF		//Step for 1 Repeat of the debounce routine (can be set in debounce.h)
-#define MAX_GS_VAL	0xFFFF		//Maximum value for Greyscale
-#define NUM_OF_SETS	5    		//Number of predefined Color Sets
+#define BAUDRATE		51			//19200 -> Refer Datasheet Page 190
+#define DIMM_STEP		1			//Step for 1 Repeat of the debounce routine (can be set in debounce.h)
+#define SET_MAX_DIM_VAL	255			//Sets the maximum value for Dimming (maximum brightness can be reduced to do leck of cooling possibilities)
+#define NUM_OF_SETS		5    		//Number of predefined Color Sets
 
 
 typedef struct {
-	uint16_t coldW1;			//coldWhite 1
-	uint16_t warmW1;			//warmWhite 1
-	uint16_t coldW2;			//coldWhite 2
-	uint16_t warmW2;			//warmWhite 2
+	uint8_t coldW1;			//coldWhite 1
+	uint8_t warmW1;			//warmWhite 1
+	uint8_t coldW2;			//coldWhite 2
+	uint8_t warmW2;			//warmWhite 2
 } GSvalues;
 
 
 //Predefined Color sets -> later unimportant
-GSvalues EEMEM GScSets[NUM_OF_SETS] =  {{ 0x0000, 0x0000, 0x0000, 0x0000 },		//Color Set 1
-										{ 0x000f, 0x000f, 0x000f, 0x000f },		//Color Set 2
-										{ 0x00FF, 0x00FF, 0x00FF, 0x00FF },		//Color Set 3
-										{ 0x0FFF, 0x0FFF, 0x0FFF, 0x0FFF },		//Color Set 4
-										{ 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF }};	//Color Set 5
+GSvalues EEMEM GScSets[NUM_OF_SETS] =  {{ 0,   0,   0,   0 },		//Color Set 1
+										{ 10,  10,  10,  10 },		//Color Set 2
+										{ 50,  50,  50,  50 },		//Color Set 3
+										{ 150, 150, 150, 150 },		//Color Set 4
+										{ 255, 255, 255, 255 }};	//Color Set 5
+//MUSS NOCH ANGEPASST WERDEN!!!!!!!!!!!!!!!!!!!
+const uint16_t logTable_16[256] =
+{
+0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4,
+4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8,
+8, 9, 9, 10, 10, 10, 11, 11, 12, 12, 13, 13, 14,
+15, 15, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24,
+25, 26, 27, 28, 29, 31, 32, 33, 35, 36, 38, 40,
+41, 43, 45, 47, 49, 52, 54, 56, 59, 61, 64, 67,
+70, 73, 76, 79, 83, 87, 91, 95, 99, 103, 108, 112,
+117, 123, 128, 134, 140, 146, 152, 159, 166, 173,
+181, 189, 197, 206, 215, 225, 235, 245, 256, 267,
+279, 292, 304, 318, 332, 347, 362, 378, 395, 412,
+431, 450, 470, 490, 512, 535, 558, 583, 609, 636,
+664, 693, 724, 756, 790, 825, 861, 899, 939, 981,
+1024, 1069, 1117, 1166, 1218, 1272, 1328, 1387,
+1448, 1512, 1579, 1649, 1722, 1798, 1878, 1961,
+2048, 2139, 2233, 2332, 2435, 2543, 2656, 2774,
+2896, 3025, 3158, 3298, 3444, 3597, 3756, 3922,
+4096, 4277, 4467, 4664, 4871, 5087, 5312, 5547,
+5793, 6049, 6317, 6597, 6889, 7194, 7512, 7845,
+8192, 8555, 8933, 9329, 9742, 10173, 10624, 11094,
+11585, 12098, 12634, 13193, 13777, 14387, 15024, 15689,
+16384, 17109, 17867, 18658, 19484, 20347, 21247, 22188,
+23170, 24196, 25268, 26386, 27554, 28774, 30048, 31379,
+32768, 34219, 35734, 37316, 38968, 40693, 42495, 44376,
+46341, 48393, 50535, 52773, 55109, 57549, 60097, 62757,
+65535
+};	//This can be outsourced to Flash memory using PROGMEM if the data memory gehts full
+
 
 //intital Greyscale Values
-GSvalues actGSvalue = {0xFF, 0xFF, 0xFF, 0xFF};
+GSvalues actGSvalue = {50, 50, 50, 50};
 	
-bool dimm_direc = true;			//true  = up
-								//false = down
-
+bool dimm_direc = true;			//true  = up; false = down
 uint8_t CSet = 0;				//Color Set
+uint8_t max_dim_val = SET_MAX_DIM_VAL;
+
+
+
 
 TLC59711 myChip;
 
@@ -83,18 +116,18 @@ ISR(TIMER0_OVF_vect)		// every 10ms for debouncing the switch
 
 void writeOutGSvalues(GSvalues* GSvalue)
 {
-	myChip.setGreyScale(3, GSvalue->coldW1, GSvalue->warmW1, 0x0);
-	myChip.setGreyScale(2, GSvalue->coldW2, GSvalue->warmW2, 0x0);
+	myChip.setGreyScale(3, logTable_16[GSvalue->coldW1], logTable_16[GSvalue->warmW1], 0x0);
+	myChip.setGreyScale(2, logTable_16[GSvalue->coldW2], logTable_16[GSvalue->warmW2], 0x0);
 }
 
 void switch_CSet(uint8_t CSet)
 {
-	//One GSvalues is 8 Bit long
+	//One Set of Dimming values is 4 Byte long
 	//EEMEM starts with addressing at 0
-	//so the first element (Cset = 0) is at 8*CSet = 0 , second at 8*Cset = 8*1 ... usw
+	//so the first element (Cset = 0) is at 4*CSet = 0 , second at 4*Cset = 4*1 ... usw
 	//interrupts should be deactivated during read and write process
 	cli();
-	eeprom_read_block (( void *) &actGSvalue , ( const void *)(CSet*8) , 8);
+	eeprom_read_block (( void *) &actGSvalue , ( const void *)(CSet*4) , 4);
 	writeOutGSvalues(&actGSvalue);
 	sei();
 }
@@ -123,8 +156,8 @@ void process_switch(void)
 		if(dimm_direc == true) //dimm up
 		{
 			//overflow prevention
-			if((actGSvalue.coldW1 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW1 <= (MAX_GS_VAL-DIMM_STEP)) &&
-			(actGSvalue.coldW2 <= (MAX_GS_VAL-DIMM_STEP)) && (actGSvalue.warmW2 <= (MAX_GS_VAL-DIMM_STEP)))
+			if((actGSvalue.coldW1 <= (max_dim_val-DIMM_STEP)) && (actGSvalue.warmW1 <= (max_dim_val-DIMM_STEP)) &&
+			   (actGSvalue.coldW2 <= (max_dim_val-DIMM_STEP)) && (actGSvalue.warmW2 <= (max_dim_val-DIMM_STEP)))
 			{
 				actGSvalue.coldW1 += DIMM_STEP;
 				actGSvalue.warmW1 += DIMM_STEP;
@@ -138,7 +171,7 @@ void process_switch(void)
 		else
 		{	//dimm down
 			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&		//overflow prevention
-			(actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
+			   (actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
 			{
 				actGSvalue.coldW1 -= DIMM_STEP;
 				actGSvalue.warmW1 -= DIMM_STEP;
