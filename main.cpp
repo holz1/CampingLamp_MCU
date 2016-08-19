@@ -65,32 +65,26 @@ GSvalues EEMEM GSmodes[NUM_OF_MODES];
 //MUSS NOCH ANGEPASST WERDEN!!!!!!!!!!!!!!!!!!!
 const uint16_t logTable_16[256] =
 {
-0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,
-2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4,
-4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8,
-8, 9, 9, 10, 10, 10, 11, 11, 12, 12, 13, 13, 14,
-15, 15, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24,
-25, 26, 27, 28, 29, 31, 32, 33, 35, 36, 38, 40,
-41, 43, 45, 47, 49, 52, 54, 56, 59, 61, 64, 67,
-70, 73, 76, 79, 83, 87, 91, 95, 99, 103, 108, 112,
-117, 123, 128, 134, 140, 146, 152, 159, 166, 173,
-181, 189, 197, 206, 215, 225, 235, 245, 256, 267,
-279, 292, 304, 318, 332, 347, 362, 378, 395, 412,
-431, 450, 470, 490, 512, 535, 558, 583, 609, 636,
-664, 693, 724, 756, 790, 825, 861, 899, 939, 981,
-1024, 1069, 1117, 1166, 1218, 1272, 1328, 1387,
-1448, 1512, 1579, 1649, 1722, 1798, 1878, 1961,
-2048, 2139, 2233, 2332, 2435, 2543, 2656, 2774,
-2896, 3025, 3158, 3298, 3444, 3597, 3756, 3922,
-4096, 4277, 4467, 4664, 4871, 5087, 5312, 5547,
-5793, 6049, 6317, 6597, 6889, 7194, 7512, 7845,
-8192, 8555, 8933, 9329, 9742, 10173, 10624, 11094,
-11585, 12098, 12634, 13193, 13777, 14387, 15024, 15689,
-16384, 17109, 17867, 18658, 19484, 20347, 21247, 22188,
-23170, 24196, 25268, 26386, 27554, 28774, 30048, 31379,
-32768, 34219, 35734, 37316, 38968, 40693, 42495, 44376,
-46341, 48393, 50535, 52773, 55109, 57549, 60097, 62757,
-65535
+0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7,
+7, 7, 8, 8, 8, 9, 9, 10, 10, 10, 11, 11, 12, 12, 13, 13, 14, 15,
+15, 16, 17, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+31, 32, 33, 35, 36, 38, 40, 41, 43, 45, 47, 49, 52, 54, 56, 59,
+61, 64, 67, 70, 73, 76, 79, 83, 87, 91, 95, 99, 103, 108, 112,
+117, 123, 128, 134, 140, 146, 152, 159, 166, 173, 181, 189, 197,
+206, 215, 225, 235, 245, 256, 267, 279, 292, 304, 318, 332, 347,
+362, 378, 395, 412, 431, 450, 470, 490, 512, 535, 558, 583, 609,
+636, 664, 693, 724, 756, 790, 825, 861, 899, 939, 981, 1024, 1069,
+1117, 1166, 1218, 1272, 1328, 1387, 1448, 1512, 1579, 1649, 1722,
+1798, 1878, 1961, 2048, 2139, 2233, 2332, 2435, 2543, 2656, 2773,
+2896, 3025, 3158, 3298, 3444, 3597, 3756, 3922, 4096, 4277, 4467,
+4664, 4871, 5087, 5312, 5547, 5793, 6049, 6317, 6596, 6889, 7194,
+7512, 7845, 8192, 8555, 8933, 9329, 9742, 10173, 10624, 11094,
+11585, 12098, 12634, 13193, 13777, 14387, 15024, 15689, 16384,
+17109, 17867, 18658, 19484, 20346, 21247, 22188, 23170, 24196,
+25267, 26386, 27554, 28774, 30048, 31378, 32768, 34218, 35733,
+37315, 38967, 40693, 42494, 44376, 46340, 48392, 50534, 52772,
+55108, 57548, 60096, 62757, 65535
 };	//This can be outsourced to Flash memory using PROGMEM if the data memory gehts full
 
 
@@ -178,47 +172,50 @@ void process_switch(void)
 			switch (mode)
 			{
 				case 0: //only side 1
-					if (actGSvalue.coldW1 <= (max_dim_val-DIMM_STEP)) && (actGSvalue.warmW1 <= (max_dim_val-DIMM_STEP))
-					{
-						actGSvalue.coldW1 += DIMM_STEP;
-						actGSvalue.warmW1 += DIMM_STEP;
-					}
+					if (actGSvalue.coldW1 <= (max_dim_val-DIMM_STEP)) actGSvalue.coldW1 += DIMM_STEP;
+					if (actGSvalue.warmW1 <= (max_dim_val-DIMM_STEP)) actGSvalue.warmW1 += DIMM_STEP;
+					break;
 				case 1: //only side 2
-					if (actGSvalue.coldW2 <= (max_dim_val-DIMM_STEP)) && (actGSvalue.warmW2 <= (max_dim_val-DIMM_STEP))
-					{
-						actGSvalue.coldW2 += DIMM_STEP;
-						actGSvalue.warmW2 += DIMM_STEP;
-					}					
-			}			
-			
-			
-			
-			//overflow prevention
-			if((actGSvalue.coldW1 <= (max_dim_val-DIMM_STEP)) && (actGSvalue.warmW1 <= (max_dim_val-DIMM_STEP)) &&
-			   (actGSvalue.coldW2 <= (max_dim_val-DIMM_STEP)) && (actGSvalue.warmW2 <= (max_dim_val-DIMM_STEP)))
-			{
-				actGSvalue.coldW1 += DIMM_STEP;
-				actGSvalue.warmW1 += DIMM_STEP;
-				actGSvalue.coldW2 += DIMM_STEP;
-				actGSvalue.warmW2 += DIMM_STEP;
-						
-				//write out to chip
-				writeOutGSvalues(&actGSvalue);
+					if (actGSvalue.coldW2 <= (max_dim_val-DIMM_STEP)) actGSvalue.coldW2 += DIMM_STEP;
+					if (actGSvalue.warmW2 <= (max_dim_val-DIMM_STEP)) actGSvalue.warmW2 += DIMM_STEP;
+					break;
+					
+				case 4: break; // OFF STATE
+					
+				default: //both sides the same for mode 2 and 3
+					if (actGSvalue.coldW1 <= (max_dim_val-DIMM_STEP)) actGSvalue.coldW1 += DIMM_STEP;
+					if (actGSvalue.warmW1 <= (max_dim_val-DIMM_STEP)) actGSvalue.warmW1 += DIMM_STEP;
+					if (actGSvalue.coldW2 <= (max_dim_val-DIMM_STEP)) actGSvalue.coldW2 += DIMM_STEP;
+					if (actGSvalue.warmW2 <= (max_dim_val-DIMM_STEP)) actGSvalue.warmW2 += DIMM_STEP;
+				break;				
 			}
+			//write out to chip								
+			writeOutGSvalues(&actGSvalue);
 		}
-		else
-		{	//dimm down
-			if((actGSvalue.coldW1 >= DIMM_STEP) && (actGSvalue.warmW1 >= DIMM_STEP) &&		//overflow prevention
-			   (actGSvalue.coldW2 >= DIMM_STEP) && (actGSvalue.warmW2 >= DIMM_STEP))
+		else	//Dimm down
+		{
+			switch (mode)
 			{
-				actGSvalue.coldW1 -= DIMM_STEP;
-				actGSvalue.warmW1 -= DIMM_STEP;
-				actGSvalue.coldW2 -= DIMM_STEP;
-				actGSvalue.warmW2 -= DIMM_STEP;
-						
-				//write out to chip
-				writeOutGSvalues(&actGSvalue);
+				case 0: //only side 1
+					if (actGSvalue.coldW1 >= DIMM_STEP) actGSvalue.coldW1 -= DIMM_STEP;
+					if (actGSvalue.warmW1 >= DIMM_STEP) actGSvalue.warmW1 -= DIMM_STEP;
+					break;
+				case 1: //only side 2
+					if (actGSvalue.coldW2 >= DIMM_STEP) actGSvalue.coldW2 -= DIMM_STEP;
+					if (actGSvalue.warmW2 >= DIMM_STEP) actGSvalue.warmW2 -= DIMM_STEP;
+					break;
+					
+				case 4: break;	//off state
+				
+				default: //both sides the same for mode 2 and 3
+					if (actGSvalue.coldW1 >= DIMM_STEP) actGSvalue.coldW1 -= DIMM_STEP;
+					if (actGSvalue.warmW1 >= DIMM_STEP) actGSvalue.warmW1 -= DIMM_STEP;
+					if (actGSvalue.coldW2 >= DIMM_STEP) actGSvalue.coldW2 -= DIMM_STEP;
+					if (actGSvalue.warmW2 >= DIMM_STEP) actGSvalue.warmW2 -= DIMM_STEP;
+					break;
 			}
+			//write out to chip
+			writeOutGSvalues(&actGSvalue);
 		}
 	}
 			
@@ -302,34 +299,34 @@ int main(void)
 			if  (RX_ERROR == false)
 			{
 				switch (command[0])
-						{
-							case  0: save_mode(command);								  break;
-							case  1: save_mode(command);								  break;
-							case  2: save_mode(command);							  	  break;
-							case  3: save_mode(command);								  break;
-							case  4: save_mode(command);								  break;
-							case  5: save_mode(command);								  break;
+				{
+					case  0: save_mode(command);								  break;
+					case  1: save_mode(command);								  break;
+					case  2: save_mode(command);							  	  break;
+					case  3: save_mode(command);								  break;
+					case  4: save_mode(command);								  break;
+					case  5: save_mode(command);								  break;
 							
-							case  6: actGSvalue.coldW1 = command[1];					  
-									 myChip.setSingleGS(3, CW1, logTable_16[command[1]]);break;
+					case  6: actGSvalue.coldW1 = command[1];					  
+								myChip.setSingleGS(3, CW1, logTable_16[command[1]]);break;
 								     				 
-							case  7:
-								actGSvalue.warmW1 = command[1]; 
-								myChip.setSingleGS(3, WW1, logTable_16[command[1]]); break;
+					case  7:
+						actGSvalue.warmW1 = command[1]; 
+						myChip.setSingleGS(3, WW1, logTable_16[command[1]]); break;
 							
-							case  8: 
-							 actGSvalue.coldW2 = command[1];
-							myChip.setSingleGS(2, WW2, logTable_16[command[1]]); break;
+					case  8: 
+						actGSvalue.coldW2 = command[1];
+					myChip.setSingleGS(2, WW2, logTable_16[command[1]]); break;
 							
-							case  9:
+					case  9:
 
-									actGSvalue.warmW2 = command[1];					
-							myChip.setSingleGS(2, CW2, logTable_16[command[1]]); break;
+							actGSvalue.warmW2 = command[1];					
+					myChip.setSingleGS(2, CW2, logTable_16[command[1]]); break;
 							
-							case 10: myChip.global_OFF(OFF);					          break;
-							case 11: switch_mode(0);									  break; //Default mode is 0						
-							default: break;
-						}
+					case 10: myChip.global_OFF(OFF);					          break;
+					case 11: switch_mode(0);									  break; //Default mode is 0						
+					default: break;
+				}
 			}
 		}
 	}
