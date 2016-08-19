@@ -134,3 +134,8 @@ unsigned char DataInReceiveBuffer( void )
 {
 	return ( USART_RxHead != USART_RxTail ); /* Return 0 (FALSE) if the receive buffer is empty */
 }
+
+unsigned char RxBytesAvailable (void)
+{
+	return USART_RxHead-USART_RxTail;		//not sure...
+}

@@ -52,7 +52,7 @@ TLC59711::TLC59711(bool OUTMMG,
 //}
 
 
-void TLC59711::setGreyScale(uint8_t RGBgroup, uint16_t GSr, uint16_t GSg, uint16_t GSb)
+void TLC59711::setGreyScale(uint8_t RGBgroup, uint16_t GSb, uint16_t GSg, uint16_t GSr)
 {
     switch(RGBgroup)
     {
@@ -151,3 +151,15 @@ void TLC59711::setGlobalBrightness(uint8_t colorGroup , uint8_t value)
     write_to_chip();
 }
 
+void TLC59711::setSingleGS(uint8_t RGBgroup, uint8_t color, uint16_t GSval)
+{
+	GS[RGBgroup*3 + color] = GSval;
+	write_to_chip();
+}
+
+void TLC59711::global_OFF(uint8_t MODE)
+{
+	for (int i = 0 ; i <12 ; i++)
+		GS[i]  = 0;
+	write_to_chip();
+}

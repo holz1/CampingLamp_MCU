@@ -21,9 +21,11 @@
 #include "spi.h"
 #include <util/delay.h>
 
-#define RED     0
+
+#define BLUE    0
 #define GREEN   1
-#define BLUE    2
+#define RED     2
+
 
 struct control{
     uint8_t write_cmd   : 6;    //
@@ -48,15 +50,17 @@ public:
     
     //virtual ~TLC59711();
     
-    void setGreyScale(uint8_t RGBgroup, uint16_t GSr, uint16_t GSg, uint16_t GSb);      //RGBgroup = one of the 4 RGB Outputs
+    void setGreyScale(uint8_t RGBgroup, uint16_t GSb, uint16_t GSg, uint16_t GSr);      //RGBgroup = one of the 4 RGB Outputs
                                                                                         //GSr = Grayscale control red
-                                                                                        //GSr = Grayscale control green
-                                                                                        //GSr = Grayscale control blue
+                                                                                        //GSg = Grayscale control green
+                                                                                        //GSb = Grayscale control blue
     
     void dimmDown(int time = 2,  uint16_t GS_max = 0xFFFF,	//PFUSCH FUNKTION
                                  uint8_t RGBgroup = 0); 
     
     void setGlobalBrightness(uint8_t color, uint8_t value);                              //color = The color to dim (red,green,blue)
+	void setSingleGS(uint8_t RGBgroup, uint8_t color, uint16_t GSval);					 //color = The color to dim (red,green,blue)
+	void global_OFF(uint8_t MODE);													//OFF - Full brightness switch; 0 = OFF			
    
 private:
     void write_to_chip();
