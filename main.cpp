@@ -261,13 +261,9 @@ int main(void)
 	
 	sei();							//Enable Global Interrups (for USART)
 		
-
-
     while (1) 
-    {
-			
+    {	
 		process_switch();			//button polling
-		
 		
 		//Parse incomming data on the UART from BTM222
 		if (DataInReceiveBuffer())
